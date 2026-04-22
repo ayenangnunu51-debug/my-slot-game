@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Golden Slot</title>
+    <title>Golden Slot - Security Update</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-container">
-        <h2 style="color: #ffd700; margin-top: 50px;">Register Account</h2>
+        <h2 style="color: #ffd700; margin-top: 50px;">Golden Slot Login</h2>
+        
         <div class="game-box">
-            <input type="text" id="username" placeholder="Username ရိုက်ပါ" style="width: 90%; padding: 15px; margin-bottom: 20px; border-radius: 10px; background: #0a0c10; color: white;">
-            <button class="play-btn" onclick="handleAuth()">အကောင့်အသစ်ဖွင့်မည်</button>
+            <input type="text" id="username" placeholder="Username (နာမည်)" style="width: 90%; padding: 15px; margin-bottom: 15px; border-radius: 10px; background: #0a0c10; color: white; border: 1px solid #333;">
+            
+            <input type="password" id="password" placeholder="Password (လျှို့ဝှက်နံပါတ်)" style="width: 90%; padding: 15px; margin-bottom: 20px; border-radius: 10px; background: #0a0c10; color: white; border: 1px solid #333;">
+            
+            <button class="play-btn" onclick="handleAuth('register')">အကောင့်သစ်ဖွင့်မည်</button>
+            <button class="play-btn" style="margin-top: 10px; background: #21262d;" onclick="handleAuth('login')">Login ဝင်မည်</button>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>
