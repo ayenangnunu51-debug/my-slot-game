@@ -7,14 +7,31 @@ let profileId = localStorage.getItem('game_user_id');
 let walletType = '';
 const symbols = ['💎', '🍒', '🔔', '⭐', '🍎', '🍋'];
 
-// --- Auth & Profile ---
+// --- ၁။ Data Fetching (Refresh Loop ပြင်ထားသည်) ---
 async function fetchCoins() {
-    if (!profileId) { window.location.href = "signup.html"; return; }
-    const { data } = await supabaseClient.from('profiles').select('*').eq('id', profileId).single();
+    if (!profileId) {
+        console.log("No User ID found.");
+        // လိပ်စာမှားပြီး Refresh ပတ်မနေအောင် သေချာစစ်ဆေးပါ
+        if (!window.location.href.includes("signup.html")) {
+            window.location.href = "signup.html";
+        }
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('id', profileId)
+        .maybeSingle();
+
     if (data) {
         coins = data.coins;
         document.getElementById('balance').innerText = coins.toLocaleString();
         document.getElementById('user-name').innerText = data.username;
+    } else {
+        console.log("User data not found in Supabase.");
+        localStorage.removeItem('game_user_id');
+        window.location.href = "signup.html";
     }
 }
 
@@ -30,7 +47,7 @@ function handleLogout() {
     }
 }
 
-// --- Wallet System (Deposit/Withdraw) ---
+// --- ၂။ Wallet System ---
 function showWallet(type) {
     walletType = type;
     document.getElementById('wallet-modal').style.display = 'block';
@@ -42,29 +59,35 @@ function showWallet(type) {
 function closeWallet() { document.getElementById('wallet-modal').style.display = 'none'; }
 
 async function submitWalletRequest() {
-    const amount = parseInt(document.getElementById('wallet-amount').value);
+    const amountInput = document.getElementById('wallet-amount').value;
     const detail = document.getElementById('transaction-id').value.trim();
+    const amount = parseInt(amountInput);
 
-    if (!amount || amount < 5000 || amount > 1000000) return alert("❌ ပမာဏ ၅၀၀၀ မှ ၁၀ သိန်းကြား ဖြစ်ရပါမည်");
-    if (walletType === 'deposit' && detail.length < 6) return alert("❌ လုပ်ငန်းစဉ်အမှတ် ၆ လုံး မှန်အောင်ထည့်ပါ");
-    
-    // Supabase 'transactions' table ထဲသို့ ပို့ခြင်း
+    if (!amount || amount < 5000 || amount > 1000000) {
+        return alert("❌ ပမာဏ ၅,၀၀၀ မှ ၁၀ သိန်းကြား ဖြစ်ရပါမည်");
+    }
+    if (walletType === 'deposit' && detail.length < 6) {
+        return alert("❌ လုပ်ငန်းစဉ်အမှတ် ၆ လုံး မှန်အောင်ထည့်ပါ");
+    }
+
     const { error } = await supabaseClient.from('transactions').insert([
         { profile_id: profileId, type: walletType, amount: amount, details: detail, status: 'pending' }
     ]);
 
     if (!error) {
-        alert("✅ တောင်းဆိုမှု ပေးပို့ပြီးပါပြီ။ Admin မှ အတည်ပြုပေးပါမည်။");
+        alert("✅ တောင်းဆိုမှု အောင်မြင်သည်။ Admin မှ အတည်ပြုပေးပါမည်။");
         closeWallet();
     } else {
-        alert("❌ မှားယွင်းနေပါသည်။ Table ဆောက်ထားခြင်း ရှိမရှိ စစ်ဆေးပါ။");
+        alert("❌ Error: Transactions Table ဆောက်ထားခြင်းရှိမရှိ ပြန်စစ်ပါ။");
     }
 }
 
-// --- Games Logic ---
+// --- ၃။ Game Logic ---
 async function playGame() {
-    if (coins < 100) return alert("ပိုက်ဆံမလုံလောက်ပါ");
-    coins -= 100; updateDB();
+    if (coins < 100) return alert("❌ ပိုက်ဆံမလုံလောက်ပါ။ ငွေအရင်သွင်းပါ။");
+    coins -= 100; 
+    updateDB();
+    
     const reels = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3')];
     let count = 0;
     const timer = setInterval(() => {
@@ -72,7 +95,7 @@ async function playGame() {
         if (++count > 15) {
             clearInterval(timer);
             if (reels[0].innerText === reels[1].innerText && reels[1].innerText === reels[2].innerText) {
-                coins += 2000; alert("ပေါက်ပြီ! +2000K");
+                coins += 2000; alert("🎉 ပေါက်ပြီ! +2,000K");
             }
             updateDB();
         }
@@ -80,7 +103,7 @@ async function playGame() {
 }
 
 async function playDice() {
-    if (coins < 100) return alert("ပိုက်ဆံမလုံလောက်ပါ");
+    if (coins < 100) return alert("❌ ပိုက်ဆံမလုံလောက်ပါ။");
     coins -= 100; updateDB();
     const d = document.getElementById('dice');
     let count = 0;
@@ -90,22 +113,27 @@ async function playDice() {
             clearInterval(timer);
             const res = Math.floor(Math.random() * 6) + 1;
             d.innerText = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'][res];
-            if (res >= 4) { coins += 300; alert("နိုင်ပြီ! +300K"); }
+            if (res >= 4) { coins += 300; alert("🎉 နိုင်ပြီ! +300K"); }
             updateDB();
         }
     }, 100);
 }
 
 async function playWheel() {
-    if (coins < 100) return alert("ပိုက်ဆံမလုံလောက်ပါ");
+    if (coins < 100) return alert("❌ ပိုက်ဆံမလုံလောက်ပါ။");
     coins -= 100; updateDB();
     const w = document.getElementById('wheel');
-    w.style.transform = "rotate(1080deg)";
+    const randomDeg = Math.floor(Math.random() * 360) + 1440; // 4 rotations + random
+    w.style.transform = `rotate(${randomDeg}deg)`;
+    
     setTimeout(() => {
+        w.style.transition = "none";
         w.style.transform = "rotate(0deg)";
-        if (Math.random() > 0.7) { coins += 500; alert("ဘီးပေါက်ပြီ! +500K"); }
+        setTimeout(() => { w.style.transition = "2s cubic-bezier(0.15, 0, 0.15, 1)"; }, 50);
+        
+        if (Math.random() > 0.7) { coins += 500; alert("🎉 ဘီးပေါက်ပြီ! +500K"); }
         updateDB();
-    }, 2000);
+    }, 2100);
 }
 
 function switchGame(g) {
@@ -113,4 +141,5 @@ function switchGame(g) {
     document.getElementById(g + '-game').style.display = 'block';
 }
 
+// Start
 fetchCoins();
