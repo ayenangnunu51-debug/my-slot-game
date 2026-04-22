@@ -3,66 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Slot - Premium Game</title>
+    <title>Golden Slot - Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-container">
-        <div id="header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+        <div id="header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
             <div>
                 <h4 style="color: gold; margin: 0;">👤 <span id="user-name">Loading...</span></h4>
-                <button onclick="handleLogout()" style="background: none; border: none; color: #ff4d4d; font-size: 0.8rem; cursor: pointer; padding: 5px 0;">Logout ထွက်ရန်</button>
+                <button onclick="handleLogout()" style="background:none; border:none; color:red; cursor:pointer; padding:0;">Logout</button>
             </div>
-            <div style="text-align: right;">
-                <h3 style="background: #222; padding: 10px; border-radius: 15px; margin: 0;">💰 <span id="balance">0</span> K</h3>
-            </div>
+            <h3 style="background: #222; padding: 10px; border-radius: 10px; margin: 0;">💰 <span id="balance">0</span> K</h3>
         </div>
 
-        <div style="margin: 15px 0; display: flex; justify-content: center; gap: 10px;">
-            <button onclick="showWallet('deposit')" class="play-btn" style="background: #28a745; width: 45%;">ငွေသွင်း</button>
-            <button onclick="showWallet('withdraw')" class="play-btn" style="background: #dc3545; width: 45%;">ငွေထုတ်</button>
+        <div style="margin: 10px 0;">
+            <button onclick="showWallet('deposit')" class="play-btn" style="background:#28a745; width:45%;">ငွေသွင်း</button>
+            <button onclick="showWallet('withdraw')" class="play-btn" style="background:#dc3545; width:45%;">ငွေထုတ်</button>
         </div>
 
-        <div class="nav-scroll" style="margin-bottom: 20px; display: flex; justify-content: center; gap: 8px;">
-            <button onclick="switchGame('slot')" class="play-btn" style="padding: 10px; font-size: 0.75rem;">🎰 Slot</button>
-            <button onclick="switchGame('dice')" class="play-btn" style="padding: 10px; font-size: 0.75rem;">🎲 Dice</button>
-            <button onclick="switchGame('wheel')" class="play-btn" style="padding: 10px; font-size: 0.75rem;">🎡 Wheel</button>
+        <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 20px;">
+            <button onclick="switchGame('slot')" class="play-btn" style="font-size:0.8rem; padding:10px;">🎰 Slot</button>
+            <button onclick="switchGame('dice')" class="play-btn" style="font-size:0.8rem; padding:10px;">🎲 Dice</button>
+            <button onclick="switchGame('wheel')" class="play-btn" style="font-size:0.8rem; padding:10px;">🎡 Wheel</button>
         </div>
 
-        <div id="wallet-modal" class="game-box" style="display: none; position: fixed; top: 10%; left: 5%; width: 85%; z-index: 1000; background: #1a1a2e; border: 2px solid gold; overflow-y: auto; max-height: 80vh; padding: 20px; border-radius: 15px;">
-            <h3 id="wallet-title" style="color: gold; margin-top: 0;">ငွေသွင်းမည်</h3>
-            <hr border="1" color="#333">
-            <div id="deposit-info" style="text-align: left; padding: 10px; font-size: 0.85rem; line-height: 1.6;">
-                <p>📱 <b>Kpay:</b> 09680575421 <br>(Thant Naing Aye)</p>
-                <p>🌊 <b>Wave:</b> 09684505232 <br>(Thant Naing Aye)</p>
-                <p style="color: #ff4d4d; font-weight: bold;">* အနည်းဆုံး ၅,၀၀၀ မှ ၁၀ သိန်းထိ</p>
+        <div id="wallet-modal" class="game-box" style="display: none; position: fixed; top: 15%; left: 5%; width: 85%; z-index: 1000; background: #1a1a2e; border: 2px solid gold; padding: 20px;">
+            <h3 id="wallet-title" style="color: gold;">ငွေသွင်းမည်</h3>
+            <div id="deposit-info" style="text-align: left; font-size: 0.8rem; margin-bottom: 10px;">
+                <p>Kpay: 09680575421 (Thant Naing Aye)</p>
+                <p>Wave: 09684505232 (Thant Naing Aye)</p>
             </div>
-            <input type="number" id="wallet-amount" placeholder="ပမာဏ (၅၀၀၀ - ၁၀၀၀၀၀၀)" style="width: 90%; padding: 12px; margin-bottom: 10px; border-radius: 5px; background: #000; color: #fff; border: 1px solid gold;">
-            <input type="text" id="transaction-id" placeholder="လုပ်ငန်းစဉ်အမှတ် (နောက်ဆုံး ၆ လုံး)" style="width: 90%; padding: 12px; margin-bottom: 20px; border-radius: 5px; background: #000; color: #fff; border: 1px solid gold;">
-            <div style="display: flex; justify-content: space-around;">
-                <button class="play-btn" style="background: #28a745; width: 45%;" onclick="submitWalletRequest()">တင်ပြမည်</button>
-                <button class="play-btn" style="background: #555; width: 45%;" onclick="closeWallet()">ပိတ်ပါ</button>
-            </div>
+            <input type="number" id="wallet-amount" placeholder="ပမာဏ (၅၀၀၀ - ၁၀သိန်း)" style="width: 90%; padding: 10px; margin-bottom: 10px; background:#000; color:#fff; border:1px solid #444;">
+            <input type="text" id="transaction-id" placeholder="လုပ်ငန်းစဉ်အမှတ် ၆ လုံး" style="width: 90%; padding: 10px; margin-bottom: 15px; background:#000; color:#fff; border:1px solid #444;">
+            <button class="play-btn" onclick="submitWalletRequest()">တင်ပြမည်</button>
+            <button class="play-btn" style="background:#555;" onclick="closeWallet()">ပိတ်ပါ</button>
         </div>
 
         <div id="slot-game" class="game-box">
-            <div style="font-size: 3.5rem; margin: 30px 0;">
+            <div style="font-size: 3rem; margin: 20px 0;">
                 <span id="r1">🎰</span> <span id="r2">🎰</span> <span id="r3">🎰</span>
             </div>
-            <button class="play-btn" onclick="playGame()" style="width: 80%; font-weight: bold;">SPIN (100K)</button>
+            <button class="play-btn" onclick="playGame()" style="width:100%;">SPIN (100K)</button>
         </div>
 
         <div id="dice-game" class="game-box" style="display:none;">
-            <div id="dice" style="font-size: 6rem; margin: 20px 0;">🎲</div>
-            <button class="play-btn" onclick="playDice()" style="width: 80%; font-weight: bold;">ROLL (100K)</button>
+            <div id="dice" style="font-size: 5rem; margin: 20px 0;">🎲</div>
+            <button class="play-btn" onclick="playDice()" style="width:100%;">ROLL (100K)</button>
         </div>
 
         <div id="wheel-game" class="game-box" style="display:none;">
-            <div id="wheel" style="font-size: 6rem; margin: 20px 0; transition: 2s cubic-bezier(0.15, 0, 0.15, 1);">🎡</div>
-            <button class="play-btn" onclick="playWheel()" style="width: 80%; font-weight: bold;">SPIN (100K)</button>
+            <div id="wheel" style="font-size: 5rem; margin: 20px 0; transition: 2s cubic-bezier(0.1, 0, 0.1, 1);">🎡</div>
+            <button class="play-btn" onclick="playWheel()" style="width:100%;">SPIN (100K)</button>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>
