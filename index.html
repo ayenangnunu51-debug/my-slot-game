@@ -11,9 +11,11 @@
         <div id="header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
             <div>
                 <h4 style="color: gold; margin: 0;">👤 <span id="user-name">...</span></h4>
-                <button onclick="handleLogout()" style="background:none; border:none; color:red; cursor:pointer;">Logout</button>
+                <button onclick="handleLogout()" style="background:none; border:none; color:red; cursor:pointer; font-size: 0.8rem;">Logout</button>
             </div>
-            <h3 style="background: #222; padding: 10px; border-radius: 10px; margin: 0;">💰 <span id="balance">0</span> K</h3>
+            <div style="text-align: right;">
+                <h3 style="background: #222; padding: 10px; border-radius: 10px; margin: 0;">💰 <span id="balance">0</span> K</h3>
+            </div>
         </div>
 
         <div style="margin: 10px 0; display: flex; justify-content: center; gap: 10px;">
@@ -21,33 +23,35 @@
             <button onclick="showWallet('withdraw')" class="play-btn" style="background:#dc3545; width:45%;">ငွေထုတ်</button>
         </div>
 
-        <div id="wallet-modal" class="game-box" style="display: none; position: fixed; top: 10%; left: 5%; width: 85%; z-index: 1000; background: #1a1a2e; border: 2px solid gold; padding: 20px; border-radius: 15px;">
+        <div id="wallet-modal" class="game-box" style="display: none; position: fixed; top: 10%; left: 5%; width: 85%; z-index: 1000; background: #1a1a2e; border: 2px solid gold; padding: 20px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
             <h3 id="wallet-title" style="color: gold; margin-top: 0;">ငွေသွင်းမည်</h3>
             
             <div id="deposit-info" style="text-align: left; font-size: 0.8rem; margin-bottom: 10px; color: #ccc;">
-                <p>Kpay: 09680575421 (Thant Naing Aye)</p>
-                <p>Wave: 09684505232 (Thant Naing Aye)</p>
+                <p>📱 Kpay: 09680575421 (Thant Naing Aye)</p>
+                <p>🌊 Wave: 09684505232 (Thant Naing Aye)</p>
             </div>
 
-            <input type="number" id="wallet-amount" oninput="calculateBalance()" placeholder="ပမာဏ (၅၀၀၀ - ၁၀သိန်း)" style="width: 90%; padding: 12px; margin-bottom: 10px; background:#000; color:#fff; border:1px solid gold;">
+            <div style="text-align: left; font-size: 0.85rem; color: gold; margin-bottom: 5px;">လက်ရှိပမာဏ: <span id="current-bal-display">0</span> K</div>
             
-            <input type="text" id="transaction-id" placeholder="လုပ်ငန်းစဉ်အမှတ် သို့မဟုတ် ဖုန်းနံပါတ်" style="width: 90%; padding: 12px; margin-bottom: 10px; background:#000; color:#fff; border:1px solid gold;">
+            <input type="number" id="wallet-amount" oninput="calculateBalance()" placeholder="ပမာဏ (၅၀၀၀ - ၁၀သိန်း)" style="width: 90%; padding: 12px; margin-bottom: 10px; background:#000; color:#fff; border:1px solid gold; border-radius: 5px;">
             
-            <div id="remaining-info" style="color: #00ff00; font-size: 0.85rem; margin-bottom: 15px; text-align: left;">
-                ဂိမ်းထဲတွင်ကျန်မည့်ငွေ: <span id="rem-bal">0</span> K
+            <input type="text" id="transaction-id" placeholder="အချက်အလက် (Transaction ID/ဖုန်းနံပါတ်)" style="width: 90%; padding: 12px; margin-bottom: 10px; background:#000; color:#fff; border:1px solid gold; border-radius: 5px;">
+            
+            <div id="remaining-info" style="color: #00ff00; font-size: 0.85rem; margin-bottom: 15px; text-align: left; font-weight: bold;">
+                ကျန်ရှိမည့်ပမာဏ: <span id="rem-bal">0</span> K
             </div>
 
-            <div style="display: flex; gap: 5px;">
+            <div style="display: flex; gap: 10px;">
                 <button class="play-btn" style="flex: 1;" onclick="submitWalletRequest()">တင်ပြမည်</button>
                 <button class="play-btn" style="background:#555; flex: 1;" onclick="closeWallet()">ပိတ်ပါ</button>
             </div>
         </div>
 
         <div id="slot-game" class="game-box">
-            <div style="font-size: 3.5rem; margin: 30px 0;">
+            <div style="font-size: 3.5rem; margin: 30px 0; background: #000; border-radius: 10px; padding: 10px;">
                 <span id="r1">🎰</span> <span id="r2">🎰</span> <span id="r3">🎰</span>
             </div>
-            <button class="play-btn" onclick="playGame()" style="width: 100%;">SPIN (100K)</button>
+            <button class="play-btn" onclick="playGame()" style="width: 100%; font-size: 1.2rem; height: 50px;">🎰 SPIN (100K)</button>
         </div>
     </div>
 
