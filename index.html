@@ -1,61 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Slot - Premium</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="app-container">
-        <div id="header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-            <div>
-                <h4 style="color: gold; margin: 0;">👤 <span id="user-name">...</span></h4>
-                <button onclick="handleLogout()" style="background: none; border: none; color: #ff4d4d; font-size: 0.8rem; cursor: pointer;">Logout ထွက်ရန်</button>
-            </div>
-            <div style="text-align: right;">
-                <h3 style="background: #222; padding: 10px; border-radius: 15px; margin: 0;">💰 <span id="balance">0</span> K</h3>
-            </div>
-        </div>
+<div id="wallet-modal" class="game-box" style="display: none; position: fixed; top: 10%; left: 5%; width: 90%; z-index: 1000; background: #1a1a2e; border: 2px solid gold; overflow-y: auto; max-height: 80vh;">
+    <h3 id="wallet-title" style="color: gold;">ငွေသွင်းမည်</h3>
+    <hr border="1" color="#333">
 
-        <div style="margin: 15px 0;">
-            <button onclick="showWallet('deposit')" class="play-btn" style="background: #28a745; padding: 10px 20px; font-size: 0.8rem;">ငွေသွင်း</button>
-            <button onclick="showWallet('withdraw')" class="play-btn" style="background: #dc3545; padding: 10px 20px; font-size: 0.8rem;">ငွေထုတ်</button>
-        </div>
-
-        <div class="nav-scroll">
-            <button onclick="switchGame('slot')" class="play-btn" style="padding: 10px 20px; font-size: 0.8rem;">🎰 Slot</button>
-            <button onclick="switchGame('dice')" class="play-btn" style="padding: 10px 20px; font-size: 0.8rem;">🎲 Dice</button>
-            <button onclick="switchGame('wheel')" class="play-btn" style="padding: 10px 20px; font-size: 0.8rem;">🎡 Wheel</button>
-        </div>
-
-        <div id="wallet-modal" class="game-box" style="display: none; position: absolute; top: 20%; left: 5%; width: 80%; z-index: 100; background: #1a1a2e; border: 2px solid gold;">
-            <h3 id="wallet-title">ငွေသွင်းမည်</h3>
-            <input type="number" id="wallet-amount" placeholder="ပမာဏ ရိုက်ပါ" style="width: 80%; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
-            <br>
-            <button class="play-btn" onclick="submitWalletRequest()">တင်ပြမည်</button>
-            <button class="play-btn" style="background: gray;" onclick="closeWallet()">ပိတ်ပါ</button>
-        </div>
-
-        <div id="slot-game" class="game-box">
-            <div class="reels-container" style="font-size: 3rem; margin: 20px 0;">
-                <span id="r1">🎰</span> <span id="r2">🎰</span> <span id="r3">🎰</span>
-            </div>
-            <button class="play-btn" onclick="playGame()">SPIN (100K)</button>
-        </div>
-
-        <div id="dice-game" class="game-box" style="display:none;">
-            <div id="dice" style="font-size: 5rem; margin: 20px 0;">🎲</div>
-            <button class="play-btn" onclick="playDice()">ROLL (100K)</button>
-        </div>
-
-        <div id="wheel-game" class="game-box" style="display:none;">
-            <div id="wheel" style="font-size: 5rem; margin: 20px 0;">🎡</div>
-            <button class="play-btn" onclick="playWheel()">SPIN (100K)</button>
-        </div>
+    <div id="deposit-info" style="text-align: left; padding: 10px; font-size: 0.9rem;">
+        <p>📱 <b>Kpay:</b> 09680575421 (Thant Naing Aye)</p>
+        <p>🌊 <b>Wave:</b> 09684505232 (Thant Naing Aye)</p>
+        <p style="color: #ff4d4d;">* အနည်းဆုံး ၅,၀၀၀ မှ အများဆုံး ၁၀ သိန်းထိ</p>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+    <input type="number" id="wallet-amount" placeholder="ပမာဏ (၅၀၀၀ - ၁၀၀၀၀၀၀)" style="width: 85%; padding: 12px; margin-bottom: 10px; border-radius: 5px;">
+    
+    <input type="text" id="transaction-id" placeholder="လုပ်ငန်းစဉ်အမှတ် (နောက်ဆုံး ၆ လုံး)" style="width: 85%; padding: 12px; margin-bottom: 15px; border-radius: 5px;">
+
+    <div style="display: flex; justify-content: space-around;">
+        <button class="play-btn" style="background: #28a745; font-size: 0.8rem;" onclick="submitWalletRequest()">တင်ပြမည်</button>
+        <button class="play-btn" style="background: #555; font-size: 0.8rem;" onclick="closeWallet()">ပိတ်ပါ</button>
+    </div>
+</div>
