@@ -45,3 +45,48 @@ async function handleAuth() {
         }
     }
 }
+// Database ကနေ ပိုက်ဆံယူခြင်း
+async function fetchCoins() {
+    if (!profileId) return;
+    const { data } = await supabaseClient.from('profiles').select('*').eq('id', profileId).single();
+    if (data) {
+        coins = data.coins;
+        if(document.getElementById('balance')) document.getElementById('balance').innerText = coins.toLocaleString();
+        if(document.getElementById('user-name')) document.getElementById('user-name').innerText = data.username;
+    }
+}
+
+// ပိုက်ဆံ Update လုပ်ခြင်း
+async function updateDB() {
+    if(document.getElementById('balance')) document.getElementById('balance').innerText = coins.toLocaleString();
+    await supabaseClient.from('profiles').update({ coins: coins }).eq('id', profileId);
+}
+
+// 🎰 Slot Game လည်ပတ်ပုံ
+async function playGame() {
+    if (coins < 100) return alert("ပိုက်ဆံမလုံလောက်ပါ");
+    coins -= 100; updateDB();
+    const reels = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3')];
+    let count = 0;
+    const timer = setInterval(async () => {
+        reels.forEach(r => r.innerText = symbols[Math.floor(Math.random() * symbols.length)]);
+        count++;
+        if (count > 10) {
+            clearInterval(timer);
+            if (reels[0].innerText === reels[1].innerText && reels[1].innerText === reels[2].innerText) {
+                coins += 1000; alert("ပေါက်ပြီ! +1000");
+            }
+            updateDB();
+        }
+    }, 100);
+}
+
+function switchGame(g) {
+    ['slot','dice','wheel'].forEach(x => {
+        const el = document.getElementById(x+'-game');
+        if(el) el.style.display = 'none';
+    });
+    if(document.getElementById(g+'-game')) document.getElementById(g+'-game').style.display = 'block';
+}
+
+fetchCoins();
