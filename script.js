@@ -5,31 +5,28 @@ const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 let coins = 0;
 let profileId = localStorage.getItem('game_user_id');
 const symbols = ['💎', '🍒', '🔔', '⭐', '🍎', '🍋'];
-
-// အသံဖိုင်များ
 const spinSound = new Audio('https://freesound.org/data/previews/121/121511_2105573-lq.mp3');
 const winSound = new Audio('https://freesound.org/data/previews/270/270402_5123851-lq.mp3');
 
 async function fetchCoins() {
-    if (!profileId) return;
+    if (!profileId) {
+        window.location.href = "signup.html";
+        return;
+    }
     const { data } = await supabaseClient.from('profiles').select('*').eq('id', profileId).single();
     if (data) {
         coins = data.coins;
-        updateUI(data.username);
+        document.getElementById('balance').innerText = coins.toLocaleString();
+        document.getElementById('user-name').innerText = data.username;
     }
 }
 
-function updateUI(name) {
-    if(document.getElementById('balance')) document.getElementById('balance').innerText = coins.toLocaleString();
-    if(document.getElementById('user-name') && name) document.getElementById('user-name').innerText = name;
-}
-
 async function updateDB() {
-    updateUI();
+    document.getElementById('balance').innerText = coins.toLocaleString();
     await supabaseClient.from('profiles').update({ coins: coins }).eq('id', profileId);
 }
 
-// --- 🎰 SLOT GAME ---
+// --- 🎰 SLOT ---
 async function playGame() {
     if (coins < 100) return alert("ပိုက်ဆံမလုံလောက်ပါ");
     coins -= 100; updateDB(); spinSound.play();
@@ -48,7 +45,7 @@ async function playGame() {
     }, 100);
 }
 
-// --- 🎲 DICE GAME ---
+// --- 🎲 DICE ---
 async function playDice() {
     if (coins < 100) return alert("ပိုက်ဆံမလုံလောက်ပါ");
     coins -= 100; updateDB(); spinSound.play();
@@ -57,14 +54,14 @@ async function playDice() {
     setTimeout(() => {
         diceEl.classList.remove('spinning');
         const res = Math.floor(Math.random() * 6) + 1;
-        const diceFaces = ['🎲', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        const diceFaces = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
         diceEl.innerText = diceFaces[res];
-        if (res >= 4) { coins += 200; winSound.play(); alert("နိုင်ပြီ! +200K"); }
+        if (res >= 4) { coins += 300; winSound.play(); alert("နိုင်ပြီ! +300K"); }
         updateDB();
     }, 1000);
 }
 
-// --- 🎡 WHEEL GAME ---
+// --- 🎡 WHEEL ---
 async function playWheel() {
     if (coins < 100) return alert("ပိုက်ဆံမလုံလောက်ပါ");
     coins -= 100; updateDB(); spinSound.play();
@@ -72,9 +69,9 @@ async function playWheel() {
     wheelEl.classList.add('spinning');
     setTimeout(() => {
         wheelEl.classList.remove('spinning');
-        const win = Math.random() > 0.7; // ၃၀ ရာခိုင်နှုန်း နိုင်ခြေ
+        const win = Math.random() > 0.7;
         if (win) { coins += 500; winSound.play(); alert("ဘီးပေါက်ပြီ! +500K"); }
-        else { alert("ကံမကောင်းပါ၊ နောက်တစ်ကြိမ်ပြန်ကြိုးစားပါ"); }
+        else { alert("ကံမကောင်းပါ၊ ထပ်ကြိုးစားပါ"); }
         updateDB();
     }, 1500);
 }
