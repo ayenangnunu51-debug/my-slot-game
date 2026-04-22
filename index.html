@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Slot Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="user-info">👤 <span id="user-name">Loading...</span></div>
+            <div class="wallet-card">
+                <small>Total Balance (K)</small>
+                <div id="balance">0</div>
+            </div>
+        </div>
+
+        <div class="nav-scroll">
+            <button onclick="switchGame('slot')" class="tab-btn active">🎰 Slot</button>
+            <button onclick="switchGame('dice')" class="tab-btn">🎲 Dice</button>
+            <button onclick="switchGame('wheel')" class="tab-btn">🎡 Wheel</button>
+        </div>
+
+        <div class="game-display">
+            <div id="slot-game" class="game-box">
+                <div class="reels-container">
+                    <div id="r1" class="reel">💎</div>
+                    <div id="r2" class="reel">💎</div>
+                    <div id="r3" class="reel">💎</div>
+                </div>
+                <button id="spin-btn" class="play-btn" onclick="playGame()">SPIN 100K</button>
+            </div>
+
+            <div id="dice-game" class="game-box" style="display:none;">
+                <div id="dice" class="dice-face">🎲</div>
+                <p>၄၊ ၅၊ ၆ ဆိုရင် (၂) ဆရမယ်!</p>
+                <button id="dice-btn" class="play-btn" onclick="playDice()">ROLL 100K</button>
+            </div>
+
+            <div id="wheel-game" class="game-box" style="display:none;">
+                <div class="wheel-container">
+                    <div id="wheel" class="wheel" style="display: inline-block;">🎡</div>
+                </div>
+                <p>ကံစမ်းမဲဘီးကို လှည့်ပါ!</p>
+                <button id="wheel-btn" class="play-btn" onclick="playWheel()">SPIN 100K</button>
+            </div>
+
+            <p id="msg" class="status-msg">Welcome to Golden Slot!</p>
+        </div>
+
+        <div class="footer-btns">
+            <button onclick="openModal()" class="f-btn gold">💰 ငွေသွင်း</button>
+            <button onclick="alert('Admin ကို ဆက်သွယ်ပါ')" class="f-btn">💸 ငွေထုတ်</button>
+        </div>
+
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3>Payment Method</h3>
+                <div class="pay-box">
+                    <p>K-Pay: <b>09680575421</b></p>
+                    <p>Name: <b>Thant Naing Aye</b></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+</body>
+</html>
