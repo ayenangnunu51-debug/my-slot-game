@@ -1,32 +1,9 @@
-:root { --gold: #ffd700; --dark: #0a0c10; --accent: #ff4d4d; }
-body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; margin: 0; text-align: center; }
-.app-container { max-width: 420px; margin: auto; padding: 10px; }
-
-.header { display: flex; justify-content: space-between; align-items: center; background: #161b22; padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid #30363d; }
-.wallet-card { text-align: right; color: var(--gold); }
-#balance { font-size: 24px; font-weight: 900; }
-
-.nav-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
-.tab-btn { min-width: 100px; padding: 12px; border-radius: 10px; border: none; background: #21262d; color: #8b949e; cursor: pointer; font-weight: bold; }
-.tab-btn.active { background: linear-gradient(45deg, #ffd700, #ff8c00); color: black; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
-
-.game-display { background: #161b22; padding: 30px 15px; border-radius: 20px; border: 2px solid #30363d; min-height: 300px; }
-.reels-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 25px; }
-.reel { width: 80px; height: 100px; background: white; color: black; font-size: 50px; display: flex; align-items: center; justify-content: center; border-radius: 12px; border: 4px solid var(--gold); }
-
-.dice-face { font-size: 100px; margin-bottom: 20px; transition: transform 0.6s; }
-.wheel { font-size: 100px; transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); display: inline-block; }
-
-.play-btn { background: linear-gradient(to bottom, #ffe066, #f39c12); color: black; border: none; padding: 18px; border-radius: 50px; width: 100%; font-size: 20px; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #b38600; margin-top: 20px; }
-.play-btn:active { transform: translateY(3px); box-shadow: none; }
-
-.footer-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-.f-btn { padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; background: #21262d; color: white; }
-.f-btn.gold { background: var(--gold); color: black; }
-
-.status-msg { margin-top: 20px; color: var(--gold); font-weight: bold; }
-
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; }
-.modal-content { background: #1e232b; margin: 30% auto; padding: 25px; border-radius: 15px; width: 80%; border: 1px solid var(--gold); position: relative; }
-.pay-box { background: #333; padding: 15px; border-radius: 10px; margin: 15px 0; }
-.close { position: absolute; right: 15px; top: 5px; font-size: 28px; cursor: pointer; }
+body { background: radial-gradient(circle, #1a1a2e, #0f0f1b); color: white; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; }
+.app-container { max-width: 400px; margin: auto; padding: 20px; }
+.game-box { background: rgba(255, 255, 255, 0.05); border: 2px solid #ffd700; border-radius: 20px; padding: 30px; margin-top: 20px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+.play-btn { background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; font-size: 1.2rem; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4); }
+.play-btn:active { transform: scale(0.95); }
+.reels-container, .dice-face, .wheel { font-size: 4rem; margin-bottom: 20px; text-shadow: 0 0 10px gold; }
+/* လှည့်နေတဲ့ပုံစံ animation */
+.spinning { animation: spin 0.1s infinite linear; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
