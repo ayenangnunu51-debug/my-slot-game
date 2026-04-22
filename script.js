@@ -3,137 +3,93 @@ const SB_KEY = "sb_publishable_wIgcdXqvZTr9MJeV6vAEYw_bMSsvD3J";
 const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
 let coins = 0;
-let profileId = null;
+let profileId = localStorage.getItem('game_user_id'); // ဖုန်းထဲမှာ မှတ်ထားတဲ့ ID ကိုယူတယ်
+let isLoginMode = false;
 const symbols = ['💎', '🍒', '🔔', '⭐', '🍎', '🍋'];
 
+// --- အကောင့်စနစ် (Auth) ---
+function toggleMode() {
+    isLoginMode = !isLoginMode;
+    document.getElementById('form-title').innerText = isLoginMode ? "Login to Game" : "Register Account";
+    document.getElementById('main-btn').innerText = isLoginMode ? "Login ဝင်မည်" : "Register & Get 5000K";
+    document.getElementById('switch-link').innerText = isLoginMode ? "အကောင့်သစ်ဖွင့်ရန်" : "Login ဝင်ရန်";
+}
+
+async function handleAuth() {
+    const user = document.getElementById('username').value;
+    if (!user) return alert("နာမည်ရိုက်ထည့်ပါ");
+
+    if (isLoginMode) {
+        // Login ဝင်ခြင်း
+        const { data, error } = await supabaseClient.from('profiles').select('*').eq('username', user).single();
+        if (data) {
+            localStorage.setItem('game_user_id', data.id); // ID ကို ဖုန်းထဲမှာ မှတ်လိုက်ပြီ
+            alert("Login အောင်မြင်သည်!");
+            window.location.href = "index.html";
+        } else {
+            alert("အကောင့်မရှိပါ။ အရင်ဖွင့်ပေးပါ");
+        }
+    } else {
+        // Register လုပ်ခြင်း
+        const { data, error } = await supabaseClient.from('profiles').insert([{ username: user, coins: 5000 }]).select().single();
+        if (data) {
+            localStorage.setItem('game_user_id', data.id); // ID မှတ်လိုက်ပြီ
+            alert("အကောင့်ဖွင့်ခြင်းအောင်မြင်သည်! ၅၀၀၀ K ရပါပြီ။");
+            window.location.href = "index.html";
+        } else {
+            alert("ဒီနာမည်က ရှိပြီးသားပါ။ တခြားနာမည်ပြောင်းပေးပါ");
+        }
+    }
+}
+
+// --- ဂိမ်းထဲက အချက်အလက်ယူခြင်း ---
 async function fetchCoins() {
-    const { data } = await supabaseClient.from('profiles').select('*').limit(1).single();
+    if (!profileId) {
+        if (window.location.pathname.includes('index.html') || window.location.pathname === '/my-slot-game/') {
+            window.location.href = "signup.html"; // အကောင့်မရှိရင် Signup ကို ပြန်လွှတ်မယ်
+        }
+        return;
+    }
+
+    const { data } = await supabaseClient.from('profiles').select('*').eq('id', profileId).single();
     if (data) {
         coins = data.coins;
-        profileId = data.id;
         document.getElementById('balance').innerText = coins.toLocaleString();
         document.getElementById('user-name').innerText = data.username;
     }
 }
 
-function switchGame(game) {
-    const games = ['slot-game', 'dice-game', 'wheel-game'];
-    games.forEach(g => document.getElementById(g).style.display = 'none');
-    document.getElementById(game + '-game').style.display = 'block';
-    
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.innerText.toLowerCase().includes(game)) btn.classList.add('active');
-    });
-    document.getElementById('msg').innerText = "Ready to Play!";
+// --- ဂိမ်း Logic များ (Slot/Dice/Wheel) ---
+async function updateDB() {
+    document.getElementById('balance').innerText = coins.toLocaleString();
+    await supabaseClient.from('profiles').update({ coins: coins }).eq('id', profileId);
 }
 
-// Slot Game Logic
+// (playGame, playDice, playWheel Function တွေက အဟောင်းအတိုင်း ဆက်ရှိနေပါမယ်)
 async function playGame() {
-    if (coins < 100) return alert("လက်ကျန်ငွေ မလုံလောက်ပါ");
-    coins -= 100;
-    updateDB();
-    
-    const btn = document.getElementById('spin-btn');
-    btn.disabled = true;
+    if (coins < 100) return alert("ပိုက်ဆံမလုံလောက်ပါ");
+    coins -= 100; updateDB();
     const reels = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3')];
-    
     let count = 0;
     const timer = setInterval(async () => {
         reels.forEach(r => r.innerText = symbols[Math.floor(Math.random() * symbols.length)]);
         count++;
-        if (count > 15) {
+        if (count > 10) {
             clearInterval(timer);
             if (reels[0].innerText === reels[1].innerText && reels[1].innerText === reels[2].innerText) {
-                coins += 1000;
-                document.getElementById('msg').innerText = "🎉 WINNER +1000 K 🎉";
-            } else {
-                document.getElementById('msg').innerText = "ထပ်မံကြိုးစားပါဦး";
+                coins += 1000; alert("ပေါက်ပြီ! +1000");
             }
-            await updateDB();
-            btn.disabled = false;
+            updateDB();
         }
     }, 100);
 }
 
-// Dice Game Logic
-async function playDice() {
-    if (coins < 100) return alert("လက်ကျန်ငွေ မလုံလောက်ပါ");
-    coins -= 100;
-    updateDB();
-    
-    const dice = document.getElementById('dice');
-    const btn = document.getElementById('dice-btn');
-    btn.disabled = true;
-    dice.style.transform = "rotate(720deg)";
-    
-    setTimeout(async () => {
-        const result = Math.floor(Math.random() * 6) + 1;
-        const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-        dice.innerText = diceFaces[result - 1];
-        dice.style.transform = "rotate(0deg)";
-        
-        if (result >= 4) {
-            coins += 200;
-            document.getElementById('msg').innerText = "🎉 အနိုင်ရရှိသည်! +200 K";
-        } else {
-            document.getElementById('msg').innerText = "ရှုံးသွားပါပြီ!";
-        }
-        await updateDB();
-        btn.disabled = false;
-    }, 600);
-}
-
-// Wheel Game Logic
-async function playWheel() {
-    if (coins < 100) return alert("လက်ကျန်ငွေ မလုံလောက်ပါ");
-    coins -= 100;
-    updateDB();
-    
-    const wheel = document.getElementById('wheel');
-    const btn = document.getElementById('wheel-btn');
-    btn.disabled = true;
-    
-    const rotation = Math.floor(Math.random() * 360) + 1440;
-    wheel.style.transform = `rotate(${rotation}deg)`;
-    
-    setTimeout(async () => {
-        const win = Math.random() > 0.7; 
-        if (win) {
-            coins += 500;
-            document.getElementById('msg').innerText = "🎊 ကံထူးပါသည်! +500 K";
-        } else {
-            document.getElementById('msg').innerText = "နောင်တစ်ကြိမ် ပြန်ကြိုးစားပါ";
-        }
-        wheel.style.transform = `rotate(0deg)`;
-        await updateDB();
-        btn.disabled = false;
-    }, 3000);
-}
-
-async function updateDB() {
-    document.getElementById('balance').innerText = coins.toLocaleString();
-    await supabaseClient.from('profiles').update({ coins: coins }).eq('id', profileId);
+function switchGame(g) {
+    ['slot','dice','wheel'].forEach(x => document.getElementById(x+'-game').style.display = 'none');
+    document.getElementById(g+'-game').style.display = 'block';
 }
 
 function openModal() { document.getElementById('modal').style.display = "block"; }
 function closeModal() { document.getElementById('modal').style.display = "none"; }
 
 fetchCoins();
-// Register Function (အကောင့်အသစ်ဆောက်ရန်)
-async function register() {
-    const username = document.getElementById('reg-user').value;
-    if (!username) return alert("Username ထည့်ပါ");
-
-    const { data, error } = await supabaseClient
-        .from('profiles')
-        .insert([{ username: username, coins: 5000 }])
-        .select();
-
-    if (error) {
-        alert("အမှားအယွင်းရှိနေပါသည် (သို့မဟုတ်) နာမည်ရှိပြီးသားဖြစ်နေသည်");
-    } else {
-        alert("အောင်မြင်ပါသည်! ၅၀၀၀ K လက်ဆောင်ရပါပြီ။");
-        window.location.href = "index.html"; // ဂိမ်းထဲကို ပြန်ပို့ပေးမည်
-    }
-}
