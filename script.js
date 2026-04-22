@@ -18,14 +18,14 @@ async function fetchCoins() {
         coins = data.coins;
         updateUI();
     } else {
-        localStorage.removeItem('game_user_id');
+        localStorage.clear();
         window.location.href = "signup.html";
     }
 }
 
 function updateUI() {
     document.getElementById('balance').innerText = coins.toLocaleString();
-    document.getElementById('user-name').innerText = localStorage.getItem('game_username') || "User";
+    document.getElementById('user-name').innerText = localStorage.getItem('game_username') || "Player";
 }
 
 async function updateDB() {
@@ -40,8 +40,6 @@ function showWallet(type) {
     document.getElementById('wallet-title').innerText = type === 'deposit' ? "ငွေသွင်းမည်" : "ငွေထုတ်မည်";
     document.getElementById('deposit-info').style.display = type === 'deposit' ? 'block' : 'none';
     document.getElementById('current-bal-display').innerText = coins.toLocaleString();
-    
-    // Reset Inputs
     document.getElementById('wallet-amount').value = '';
     document.getElementById('transaction-id').value = '';
     document.getElementById('rem-bal').innerText = coins.toLocaleString();
@@ -65,7 +63,6 @@ async function submitWalletRequest() {
     if (!det) return alert("❌ အချက်အလက် ပြည့်စုံစွာ ဖြည့်ပါ");
     if (walletType === 'withdraw' && amt > coins) return alert("❌ လက်ကျန်ငွေ မလုံလောက်ပါ");
 
-    // Supabase Insert
     const { error } = await supabaseClient.from('transactions').insert([
         { profile_id: profileId, type: walletType, amount: amt, details: det, status: 'pending' }
     ]);
@@ -77,7 +74,7 @@ async function submitWalletRequest() {
             coins -= amt;
             updateDB();
         }
-        alert("✅ တောင်းဆိုမှု အောင်မြင်ပါသည်။ Admin အတည်ပြုချက်ကို စောင့်ဆိုင်းပါ။");
+        alert("✅ တောင်းဆိုမှု အောင်မြင်ပါသည်။");
         closeWallet();
     }
 }
@@ -104,10 +101,10 @@ async function playGame() {
 function checkWin(a, b, c) {
     if (a === b && b === c) {
         coins += 2000;
-        alert("🎉 ထီပေါက်ပြီ! +2,000K ရရှိပါသည်။");
+        alert("🎉 ထီပေါက်ပြီ! +2,000K");
     } else if (a === b || b === c || a === c) {
         coins += 200;
-        alert("🎊 နှစ်လုံးတူပေါက်ပြီ! +200K ရရှိပါသည်။");
+        alert("🎊 နှစ်လုံးတူ! +200K");
     }
     updateDB();
 }
