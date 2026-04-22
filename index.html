@@ -3,72 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Slot Pro</title>
+    <title>Golden Slot - Casino</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-container">
-        <div class="header">
-            <div class="user-info">👤 <span id="user-name">Loading...</span></div>
-            <div class="wallet-card">
-                <small>Total Balance (K)</small>
-                <div id="balance">0</div>
-            </div>
-        </div>
-
-        <div style="margin: 10px 0;">
-            <a href="signup.html" style="color: #ffd700; text-decoration: none; font-weight: bold; background: #21262d; padding: 8px 15px; border-radius: 20px; border: 1px solid #ffd700;">
-                💎 အကောင့်သစ်ဖွင့်ရန် ဤနေရာကိုနှိပ်ပါ
-            </a>
+        <div id="header">
+            <h3 style="color: gold;">👤 <span id="user-name">Loading...</span></h3>
+            <h2 style="background: #222; padding: 10px; border-radius: 10px;">💰 <span id="balance">0</span> K</h2>
         </div>
 
         <div class="nav-scroll">
-            <button onclick="switchGame('slot')" class="tab-btn active">🎰 Slot</button>
+            <button onclick="switchGame('slot')" class="tab-btn">🎰 Slot</button>
             <button onclick="switchGame('dice')" class="tab-btn">🎲 Dice</button>
             <button onclick="switchGame('wheel')" class="tab-btn">🎡 Wheel</button>
         </div>
 
-        <div class="game-display">
-            <div id="slot-game" class="game-box">
-                <div class="reels-container">
-                    <div id="r1" class="reel">💎</div>
-                    <div id="r2" class="reel">💎</div>
-                    <div id="r3" class="reel">💎</div>
-                </div>
-                <button id="spin-btn" class="play-btn" onclick="playGame()">SPIN 100K</button>
+        <div id="slot-game" class="game-box">
+            <div class="reels-container">
+                <span id="r1">🎰</span> <span id="r2">🎰</span> <span id="r3">🎰</span>
             </div>
-
-            <div id="dice-game" class="game-box" style="display:none;">
-                <div id="dice" class="dice-face">🎲</div>
-                <p>၄၊ ၅၊ ၆ ဆိုရင် (၂) ဆရမယ်!</p>
-                <button id="dice-btn" class="play-btn" onclick="playDice()">ROLL 100K</button>
-            </div>
-
-            <div id="wheel-game" class="game-box" style="display:none;">
-                <div class="wheel-container">
-                    <div id="wheel" class="wheel" style="display: inline-block;">🎡</div>
-                </div>
-                <p>ကံစမ်းမဲဘီးကို လှည့်ပါ!</p>
-                <button id="wheel-btn" class="play-btn" onclick="playWheel()">SPIN 100K</button>
-            </div>
-
-            <p id="msg" class="status-msg">Welcome to Golden Slot!</p>
+            <button class="play-btn" onclick="playGame()">SPIN (100K)</button>
         </div>
 
-        <div class="footer-btns">
-            <button onclick="openModal()" class="f-btn gold">💰 ငွေသွင်း</button>
-            <button onclick="alert('Admin ကို ဆက်သွယ်ပါ')" class="f-btn">💸 ငွေထုတ်</button>
+        <div id="dice-game" class="game-box" style="display:none;">
+            <div id="dice" class="dice-face">🎲</div>
+            <button class="play-btn" onclick="playDice()">ROLL (100K)</button>
         </div>
 
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h3>Payment Method</h3>
-                <div class="pay-box">
-                    <p>K-Pay: <b>09680575421</b></p>
-                    <p>Name: <b>Thant Naing Aye</b></p>
-                </div>
-            </div>
+        <div id="wheel-game" class="game-box" style="display:none;">
+            <div id="wheel" class="wheel">🎡</div>
+            <button class="play-btn" onclick="playWheel()">SPIN WHEEL (100K)</button>
         </div>
     </div>
 
