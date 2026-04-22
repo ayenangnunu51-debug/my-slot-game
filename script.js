@@ -13,6 +13,7 @@ function switchMode() {
     isLoginMode = !isLoginMode;
     document.getElementById('title').innerText = isLoginMode ? "Login ဝင်ရန်" : "Golden Slot";
     document.getElementById('btn-action').innerText = isLoginMode ? "Login ဝင်မည်" : "အကောင့်အသစ်ဖွင့်မည်";
+    document.getElementById('toggle-text').innerHTML = isLoginMode ? 'အကောင့်မရှိသေးဘူးလား? <span style="color: gold;">ဒီမှာ အသစ်ဖွင့်ပါ</span>' : 'အကောင့်ရှိပြီးသားလား? <span style="color: gold;">ဒီမှာ Login ဝင်ပါ</span>';
 }
 
 async function handleAuth() {
@@ -38,7 +39,7 @@ function handleLogout() {
     window.location.href = "signup.html";
 }
 
-// --- Data & Wallet ---
+// --- Data Fetching ---
 async function fetchCoins() {
     if (!profileId) {
         if (window.location.pathname.includes("index.html") || window.location.pathname.endsWith("/")) {
@@ -46,7 +47,7 @@ async function fetchCoins() {
         }
         return;
     }
-    const { data } = await supabaseClient.from('profiles').select('*').eq('id', profileId).maybeSingle();
+    const { data, error } = await supabaseClient.from('profiles').select('*').eq('id', profileId).maybeSingle();
     if (data) {
         coins = data.coins;
         document.getElementById('balance').innerText = coins.toLocaleString();
@@ -59,6 +60,7 @@ async function updateDB() {
     await supabaseClient.from('profiles').update({ coins: coins }).eq('id', profileId);
 }
 
+// --- Wallet System (ဒါက Nang Nu မရဖြစ်နေတဲ့အပိုင်း) ---
 function showWallet(type) {
     walletType = type;
     document.getElementById('wallet-modal').style.display = 'block';
@@ -69,17 +71,33 @@ function showWallet(type) {
 function closeWallet() { document.getElementById('wallet-modal').style.display = 'none'; }
 
 async function submitWalletRequest() {
-    const amt = parseInt(document.getElementById('wallet-amount').value);
+    const amtInput = document.getElementById('wallet-amount').value;
     const det = document.getElementById('transaction-id').value.trim();
-    if (!amt || amt < 5000) return alert("အနည်းဆုံး ၅၀၀၀ ကျပ်ပါ");
-    
+    const amt = parseInt(amtInput);
+
+    if (!amt || amt < 5000) return alert("အနည်းဆုံး ၅၀၀၀ ကျပ် ရိုက်ထည့်ပါ");
+    if (!det) return alert("အချက်အလက် (Transaction ID သို့မဟုတ် ဖုန်းနံပါတ်) ထည့်ပါ");
+
+    // Supabase ကို ပို့ခြင်း
     const { error } = await supabaseClient.from('transactions').insert([
-        { profile_id: profileId, type: walletType, amount: amt, details: det, status: 'pending' }
+        { 
+            profile_id: profileId, 
+            type: walletType, 
+            amount: amt, 
+            details: det, 
+            status: 'pending' 
+        }
     ]);
-    if (!error) { alert("တင်ပြပြီးပါပြီ"); closeWallet(); }
+
+    if (error) {
+        alert("Error: " + error.message + "\n(Supabase Table Settings ကို ပြန်စစ်ပါ)");
+    } else {
+        alert("✅ တင်ပြမှု အောင်မြင်ပါသည်။ Admin မှ အတည်ပြုပေးပါမည်။");
+        closeWallet();
+    }
 }
 
-// --- Games ---
+// --- Game Logic ---
 async function playGame() {
     if (coins < 100) return alert("ပိုက်ဆံမလုံလောက်ပါ");
     coins -= 100; updateDB();
@@ -97,33 +115,13 @@ async function playGame() {
     }, 100);
 }
 
-async function playDice() {
-    if (coins < 100) return alert("ပိုက်ဆံမလုံလောက်ပါ");
-    coins -= 100; updateDB();
-    const d = document.getElementById('dice');
-    setTimeout(() => {
-        const res = Math.floor(Math.random() * 6) + 1;
-        d.innerText = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'][res];
-        if (res >= 4) { coins += 300; alert("နိုင်ပြီ +300"); }
-        updateDB();
-    }, 500);
-}
-
-async function playWheel() {
-    if (coins < 100) return alert("ပိုက်ဆံမလုံလောက်ပါ");
-    coins -= 100; updateDB();
-    const w = document.getElementById('wheel');
-    w.style.transform = `rotate(${Math.floor(Math.random() * 360) + 720}deg)`;
-    setTimeout(() => {
-        w.style.transform = "rotate(0deg)";
-        if (Math.random() > 0.7) { coins += 500; alert("နိုင်ပြီ +500"); }
-        updateDB();
-    }, 2000);
-}
-
 function switchGame(g) {
-    ['slot','dice','wheel'].forEach(x => document.getElementById(x+'-game').style.display='none');
+    ['slot','dice','wheel'].forEach(x => {
+        const el = document.getElementById(x+'-game');
+        if(el) el.style.display='none';
+    });
     document.getElementById(g+'-game').style.display='block';
 }
 
+// Start
 fetchCoins();
