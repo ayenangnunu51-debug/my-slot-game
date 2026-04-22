@@ -120,3 +120,20 @@ function openModal() { document.getElementById('modal').style.display = "block";
 function closeModal() { document.getElementById('modal').style.display = "none"; }
 
 fetchCoins();
+// Register Function (အကောင့်အသစ်ဆောက်ရန်)
+async function register() {
+    const username = document.getElementById('reg-user').value;
+    if (!username) return alert("Username ထည့်ပါ");
+
+    const { data, error } = await supabaseClient
+        .from('profiles')
+        .insert([{ username: username, coins: 5000 }])
+        .select();
+
+    if (error) {
+        alert("အမှားအယွင်းရှိနေပါသည် (သို့မဟုတ်) နာမည်ရှိပြီးသားဖြစ်နေသည်");
+    } else {
+        alert("အောင်မြင်ပါသည်! ၅၀၀၀ K လက်ဆောင်ရပါပြီ။");
+        window.location.href = "index.html"; // ဂိမ်းထဲကို ပြန်ပို့ပေးမည်
+    }
+}
