@@ -32,21 +32,21 @@
         <div id="wallet-modal" class="game-box" style="display: none; position: fixed; top: 10%; left: 5%; width: 85%; z-index: 1000; background: #1a1a2e; border: 2px solid gold; overflow-y: auto; max-height: 80vh;">
             <h3 id="wallet-title" style="color: gold;">ငွေသွင်းမည်</h3>
             <hr border="1" color="#333">
-            <div id="deposit-info" style="text-align: left; padding: 10px; font-size: 0.9rem;">
+            <div id="deposit-info" style="text-align: left; padding: 10px; font-size: 0.8rem;">
                 <p>📱 <b>Kpay:</b> 09680575421 (Thant Naing Aye)</p>
                 <p>🌊 <b>Wave:</b> 09684505232 (Thant Naing Aye)</p>
-                <p style="color: #ff4d4d;">* အနည်းဆုံး ၅,၀၀၀ မှ အများဆုံး ၁၀ သိန်းထိ</p>
+                <p style="color: #ff4d4d;">* အနည်းဆုံး ၅,၀၀၀ မှ ၁၀ သိန်းထိ</p>
             </div>
             <input type="number" id="wallet-amount" placeholder="ပမာဏ (၅၀၀၀ - ၁၀၀၀၀၀၀)" style="width: 85%; padding: 12px; margin-bottom: 10px; border-radius: 5px; background: #000; color: #fff; border: 1px solid #444;">
             <input type="text" id="transaction-id" placeholder="လုပ်ငန်းစဉ်အမှတ် (နောက်ဆုံး ၆ လုံး)" style="width: 85%; padding: 12px; margin-bottom: 15px; border-radius: 5px; background: #000; color: #fff; border: 1px solid #444;">
             <div style="display: flex; justify-content: space-around; padding-bottom: 10px;">
-                <button class="play-btn" style="background: #28a745; font-size: 0.8rem;" onclick="submitWalletRequest()">တင်ပြမည်</button>
-                <button class="play-btn" style="background: #555; font-size: 0.8rem;" onclick="closeWallet()">ပိတ်ပါ</button>
+                <button class="play-btn" style="background: #28a745;" onclick="submitWalletRequest()">တင်ပြမည်</button>
+                <button class="play-btn" style="background: #555;" onclick="closeWallet()">ပိတ်ပါ</button>
             </div>
         </div>
 
         <div id="slot-game" class="game-box">
-            <div class="reels-container" style="font-size: 3.5rem; margin: 20px 0;">
+            <div style="font-size: 3.5rem; margin: 20px 0;">
                 <span id="r1">🎰</span> <span id="r2">🎰</span> <span id="r3">🎰</span>
             </div>
             <button class="play-btn" onclick="playGame()">SPIN (100K)</button>
