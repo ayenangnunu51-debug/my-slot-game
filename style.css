@@ -1,14 +1,23 @@
-body { background: #0b1320; color: white; font-family: sans-serif; margin: 0; padding-bottom: 70px; }
+body { background: #0b1320; color: white; font-family: sans-serif; margin: 0; padding-bottom: 80px; }
+
+/* Header Design */
 .top-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #161d2b; border-bottom: 1px solid #2a3547; }
+.logo { color: gold; font-weight: bold; font-size: 18px; }
 .auth-box { display: flex; gap: 5px; }
-.auth-box input { width: 80px; padding: 6px; border-radius: 4px; border: 1px solid #444; background: white; font-size: 11px; color: black; }
-.login-btn { background: #ffc107; border: none; padding: 6px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; color: black; }
-.category-nav { display: flex; overflow-x: auto; background: #1a2435; padding: 10px 0; border-bottom: 2px solid gold; }
-.cat-item { min-width: 70px; text-align: center; font-size: 10px; color: #aaa; }
+.auth-box input { width: 85px; padding: 6px; border-radius: 4px; border: none; font-size: 11px; }
+.login-btn { background: #ffc107; border: none; padding: 6px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+/* Nav Design */
+.category-nav { display: flex; overflow-x: auto; background: #1a2435; padding: 10px 0; border-bottom: 2px solid gold; gap: 15px; }
+.cat-item { min-width: 60px; text-align: center; font-size: 10px; color: #aaa; }
 .cat-item.active { color: gold; font-weight: bold; }
-.main-banner { height: 180px; margin: 10px; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://via.placeholder.com/500x200'); background-size: cover; border-radius: 10px; display: flex; align-items: center; justify-content: center; text-align: center; border: 1px solid gold; }
-.promo-text h2 { color: #ff0; margin: 0; font-size: 24px; }
-.cashback { background: rgba(255,0,0,0.8); padding: 5px 15px; border-radius: 20px; margin-top: 10px; display: inline-block; font-weight: bold; }
-.bottom-menu { position: fixed; bottom: 0; width: 100%; background: #161d2b; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333; }
+
+/* Banner Design */
+.main-banner { height: 180px; margin: 15px; background: linear-gradient(45deg, #0d1b2a, #1b263b); border-radius: 12px; display: flex; align-items: center; justify-content: center; text-align: center; border: 1px solid gold; box-shadow: 0 0 15px gold; }
+.promo-text h2 { color: gold; font-size: 28px; margin: 0; }
+.cashback { background: red; padding: 5px 15px; border-radius: 20px; margin-top: 10px; display: inline-block; font-weight: bold; }
+
+/* Bottom Menu */
+.bottom-menu { position: fixed; bottom: 0; width: 100%; background: #161d2b; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 100; }
 .menu-item { font-size: 10px; text-align: center; color: #ccc; }
-.main-btn { transform: translateY(-10px); background: #161d2b; padding: 5px; border-radius: 50%; border-top: 2px solid gold; }
+.main-btn { transform: translateY(-15px); background: #161d2b; padding: 8px; border-radius: 50%; border-top: 3px solid gold; width: 50px; }
