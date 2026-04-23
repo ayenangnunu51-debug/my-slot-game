@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Slot - Signup</title>
+    <title>Golden Casino - Join Now</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
-        <h2 id="title" style="color: gold;">Golden Slot</h2>
+    <div class="app-container auth-page">
+        <h1 style="color: gold; text-shadow: 0 0 10px gold;">GOLDEN CASINO</h1>
         <div class="game-box">
-            <input type="text" id="username" placeholder="နာမည်ရိုက်ထည့်ပါ" style="width: 85%; padding: 12px; margin-bottom: 10px;">
-            <input type="password" id="password" placeholder="Password (၆ လုံး)" style="width: 85%; padding: 12px; margin-bottom: 15px;">
-            <button id="btn-action" class="play-btn" onclick="handleAuth()" style="width: 90%;">အကောင့်ဖွင့်မည်</button>
-            <p id="toggle-text" onclick="switchMode()" style="color: #ccc; cursor: pointer; margin-top: 15px;">အကောင့်ရှိပြီးသားလား? <span style="color: gold;">Login ဝင်ပါ</span></p>
+            <h2 id="auth-title">CREATE ACCOUNT</h2>
+            <input type="text" id="username" placeholder="နာမည် (Username)" required>
+            <input type="password" id="password" placeholder="စကားဝှက် (Password)" required>
+            <button onclick="handleAuth()" id="auth-btn" class="action-btn">အကောင့်ဖွင့်မည်</button>
+            <p id="toggle-auth" onclick="switchMode()">အကောင့်ရှိပြီးသားလား? <span style="color: gold;">Login ဝင်ပါ</span></p>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
