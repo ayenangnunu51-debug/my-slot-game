@@ -56,7 +56,53 @@ async function handleWallet(action) {
     const { error } = await supabase.from('profiles').update({ coins: newBalance }).eq('username', username);
     if (!error) { coins = newBalance; updateUI(); closeWallet(); alert("အောင်မြင်ပါသည်"); }
 }
+// Signup Form ကို Popup အနေနဲ့ ပြသရန်
+function showSignup() {
+    const panel = document.getElementById('wallet-panel');
+    const body = document.getElementById('wallet-body');
+    panel.style.display = 'flex';
+    body.innerHTML = `
+        <h3 style="color:gold;">အကောင့်သစ်ဖွင့်ရန်</h3>
+        <input type="text" id="reg-user" placeholder="အမည်သစ် (Username)">
+        <input type="password" id="reg-pass" placeholder="လျှို့ဝှက်နံပါတ် (အနည်းဆုံး ၆ လုံး)">
+        <button class="login-btn" onclick="handleSignup()">အကောင့်ဖွင့်မည်</button>
+    `;
+}
 
+async function handleSignup() {
+    const newUser = document.getElementById('reg-user').value.trim();
+    const newPass = document.getElementById('reg-pass').value;
+
+    // ၁။ Password ၆ လုံးရှိမရှိ စစ်ဆေးခြင်း
+    if (newPass.length < 6) {
+        return alert("Password က အနည်းဆုံး ၆ လုံး ရှိရပါမယ်။");
+    }
+
+    if (!newUser) return alert("အမည် ထည့်သွင်းပါ။");
+
+    // ၂။ Username တူနေသလား Supabase မှာ စစ်ဆေးခြင်း
+    const { data: existingUser } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('username', newUser)
+        .single();
+
+    if (existingUser) {
+        return alert("ဒီအမည်က ရှိပြီးသားဖြစ်နေလို့ တခြားအမည်တစ်ခု သုံးပေးပါ။");
+    }
+
+    // ၃။ အကောင့်အသစ်ကို Database ထဲ ထည့်သွင်းခြင်း (စစချင်း coins ၅၀၀၀ လက်ဆောင်ပေးမယ်)
+    const { error } = await supabase
+        .from('profiles')
+        .insert([{ username: newUser, password: newPass, coins: 5000 }]);
+
+    if (!error) {
+        alert("အကောင့်ဖွင့်ခြင်း အောင်မြင်ပါသည်။ အခု ဝင်ရောက်နိုင်ပါပြီ။");
+        closeWallet();
+    } else {
+        alert("အမှားအယွင်း တစ်ခုရှိနေပါသည်။");
+    }
+}
 function closeWallet() { document.getElementById('wallet-panel').style.display = 'none'; }
 
 async function spinSlot() {
