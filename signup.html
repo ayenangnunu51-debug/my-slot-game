@@ -1,23 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Casino - Join Now</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Login / Signup</title>
+    <style>body{background:#0a0a0a; color:white; text-align:center; padding-top:100px;}</style>
 </head>
 <body>
-    <div class="app-container auth-page">
-        <h1 style="color: gold; text-shadow: 0 0 15px gold;">GOLDEN CASINO</h1>
-        <div class="game-box">
-            <h2 id="auth-title" style="letter-spacing: 2px;">CREATE ACCOUNT</h2>
-            <input type="text" id="username" placeholder="နာမည် (Username)" required>
-            <input type="password" id="password" placeholder="စကားဝှက် (Password)" required>
-            <button onclick="handleAuth()" id="auth-btn" class="action-btn">အကောင့်ဖွင့်မည်</button>
-            <p id="toggle-auth" onclick="switchMode()" style="cursor:pointer; margin-top:15px;">အကောင့်ရှိပြီးသားလား? <span style="color: gold;">Login ဝင်ပါ</span></p>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js"></script>
+    <h2>ဂိမ်းအကောင့်ဝင်ရန်</h2>
+    <input type="text" id="username" placeholder="နာမည်ရိုက်ပါ" style="padding:10px;"><br><br>
+    <button onclick="login()" style="padding:10px 20px; background:gold; border:none; cursor:pointer; font-weight:bold;">ဝင်မည် (LOGIN)</button>
+
+    <script>
+        function login() {
+            const name = document.getElementById('username').value;
+            if(!name) return;
+            localStorage.setItem('game_user_id', 'user_' + Date.now());
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
 </html>
