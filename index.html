@@ -3,116 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nang Nu Casino & Wallet</title>
+    <title>Nang Nu Online Casino</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #ffd700; --dark-blue: #0b0b1a; --glass: rgba(255, 255, 255, 0.1); }
-        body { background: var(--dark-blue); color: white; font-family: sans-serif; margin: 0; text-align: center; }
-        .container { max-width: 500px; margin: auto; padding: 10px; }
+        :root { --gold: #ffd700; --bg: #0a0a0a; --green: #1a4a2e; }
+        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; text-align: center; }
+        .app { max-width: 500px; margin: auto; padding: 10px; }
         
-        /* Header & Nav */
-        .header { display: flex; justify-content: space-between; padding: 15px; background: #16162d; border-radius: 10px; margin-bottom: 5px; }
-        .nav-tabs { display: flex; gap: 5px; margin-bottom: 15px; overflow-x: auto; padding: 5px; }
-        .nav-btn { flex: 1; padding: 10px; background: #222; border: none; color: white; border-radius: 5px; cursor: pointer; white-space: nowrap; }
-        .nav-btn.active { background: var(--gold); color: black; font-weight: bold; }
+        /* Nav Tabs */
+        .nav { display: flex; gap: 5px; overflow-x: auto; padding: 10px 0; }
+        .nav button { flex: 1; padding: 10px; border: none; border-radius: 5px; background: #222; color: white; cursor: pointer; white-space: nowrap; }
+        .nav button.active { background: var(--gold); color: black; font-weight: bold; }
 
-        /* Game Areas */
-        .game-panel { display: none; background: #16162d; padding: 20px; border-radius: 15px; min-height: 400px; position: relative; }
-        .game-panel.active { display: block; }
-
-        /* Casino Table (Shan Koe Mee) */
-        .casino-table {
-            background: radial-gradient(circle, #1a4a2e 0%, #0d2b1a 100%);
-            border: 10px solid #4e342e; border-radius: 150px; height: 350px;
-            position: relative; margin: 20px auto; box-shadow: inset 0 0 50px #000;
-        }
+        /* Table & Cards */
+        .table-area { background: radial-gradient(circle, var(--green) 0%, #0d2b1a 100%); border: 8px solid #4e342e; border-radius: 150px; height: 350px; position: relative; margin: 20px auto; }
         .seat { position: absolute; font-size: 11px; }
-        .dealer-pos { top: 10%; left: 50%; transform: translateX(-50%); }
-        .p-pos { top: 35%; } .l { left: 10%; } .r { right: 10%; }
-        .user-pos { bottom: 8%; left: 50%; transform: translateX(-50%); }
-        .card-fan { display: flex; justify-content: center; height: 50px; margin-top: 5px; }
-        .card { width: 32px; height: 48px; background: white; color: black; border-radius: 4px; margin-left: -12px; font-size: 10px; font-weight: bold; border: 1px solid #999; box-shadow: 2px 2px 5px rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: space-around; }
+        .dealer { top: 10%; left: 50%; transform: translateX(-50%); }
+        .p1 { top: 35%; left: 10%; } .p2 { top: 35%; right: 10%; }
+        .me { bottom: 8%; left: 50%; transform: translateX(-50%); }
+        .card-box { display: flex; justify-content: center; height: 50px; }
+        .card { width: 32px; height: 48px; background: white; color: black; border-radius: 4px; margin-left: -12px; font-size: 10px; font-weight: bold; border: 1px solid #999; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 5px #000; }
         .red { color: #d00; }
 
-        /* Timer UI */
-        .timer-box { margin-bottom: 10px; }
-        .progress { width: 100%; height: 6px; background: #222; border-radius: 3px; overflow: hidden; }
-        #timer-bar { width: 100%; height: 100%; background: var(--gold); transition: width 1s linear; }
+        /* Game Panels */
+        .panel { display: none; background: #16162d; padding: 20px; border-radius: 15px; margin-top: 10px; min-height: 400px; }
+        .panel.active { display: block; }
+        .timer-bar { width: 100%; height: 6px; background: #222; margin: 10px 0; border-radius: 3px; overflow: hidden; }
+        #bar-fill { width: 100%; height: 100%; background: var(--gold); transition: width 1s linear; }
 
-        /* Slot, Dice, Wheel Styles */
-        .slot-machine { font-size: 50px; margin: 30px 0; letter-spacing: 15px; }
-        .dice-box { font-size: 80px; margin: 20px 0; }
-        .wheel-box { width: 150px; height: 150px; border: 5px solid var(--gold); border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 40px; }
-
-        /* Wallet System */
-        .wallet-box { background: #16162d; padding: 20px; border-radius: 15px; text-align: left; }
-        .wallet-btn { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        .in { background: #28a745; color: white; }
-        .out { background: #dc3545; color: white; }
-
-        /* Common Buttons */
-        .main-btn { width: 100%; padding: 15px; background: linear-gradient(var(--gold), #b8860b); border: none; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }
-        .main-btn:disabled { background: #555; opacity: 0.5; }
+        /* Wallet */
+        .wallet { text-align: left; }
+        .btn-in { background: #28a745; width: 100%; padding: 12px; color: white; border: none; border-radius: 5px; margin-top: 5px; }
+        .btn-out { background: #dc3545; width: 100%; padding: 12px; color: white; border: none; border-radius: 5px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-<div class="container" id="main-app">
-    <div class="header">
-        <div>👤 <span id="display-user">...</span></div>
-        <div style="color: var(--gold);">💰 <span id="balance">0</span> K</div>
+<div class="app">
+    <div style="display: flex; justify-content: space-between; padding: 10px;">
+        <div>👤 <span id="user-display">...</span></div>
+        <div style="color: var(--gold);">💰 <span id="coin-display">0</span> K</div>
     </div>
 
-    <div class="nav-tabs">
-        <button onclick="switchTab('shan')" id="btn-shan" class="nav-btn active">ရှမ်းကိုးမီး</button>
-        <button onclick="switchTab('slot')" id="btn-slot" class="nav-btn">SLOT</button>
-        <button onclick="switchTab('dice')" id="btn-dice" class="nav-btn">DICE</button>
-        <button onclick="switchTab('wheel')" id="btn-wheel" class="nav-btn">WHEEL</button>
-        <button onclick="switchTab('wallet')" id="btn-wallet" class="nav-btn">WALLET</button>
+    <div class="nav">
+        <button onclick="tab('shan')" id="t-shan" class="active">ရှမ်းကိုးမီး</button>
+        <button onclick="tab('slot')" id="t-slot">SLOT</button>
+        <button onclick="tab('dice')" id="t-dice">DICE</button>
+        <button onclick="tab('wheel')" id="t-wheel">WHEEL</button>
+        <button onclick="tab('wallet')" id="t-wallet">WALLET</button>
     </div>
 
-    <div id="shan-panel" class="game-panel active">
-        <div class="timer-box">
-            <div id="status-text" style="font-size: 13px; color: #28a745;">လောင်းကြေးတင်နိုင်သည်</div>
-            <div class="progress"><div id="timer-bar"></div></div>
-            <div id="timer-num">30</div>
+    <div id="shan" class="panel active">
+        <div id="status">လောင်းကြေးတင်နိုင်သည်</div>
+        <div class="timer-bar"><div id="bar-fill"></div></div>
+        <div id="timer-txt">30</div>
+        <div class="table-area">
+            <div class="seat dealer"><div id="d-cards" class="card-box"></div>Dealer</div>
+            <div class="seat p1"><div id="p1-cards" class="card-box"></div>P1</div>
+            <div class="seat p2"><div id="p2-cards" class="card-box"></div>P2</div>
+            <div class="seat me"><div id="my-cards" class="card-box"></div>YOU <span id="my-bet"></span></div>
         </div>
-        <div class="casino-table">
-            <div class="seat dealer-pos"><div id="dealer-cards" class="card-fan"></div><p>Dealer</p></div>
-            <div class="seat p-pos l"><div id="p1-cards" class="card-fan"></div><p>P1</p></div>
-            <div class="seat p-pos r"><div id="p2-cards" class="card-fan"></div><p>P2</p></div>
-            <div class="seat user-pos"><div id="me-cards" class="card-fan"></div><div class="label">YOU <span id="my-bet-label"></span></div></div>
-        </div>
-        <select id="bet-amt-shan" style="width: 50%; padding: 8px;"><option value="500">500 K</option><option value="1000">1000 K</option></select>
-        <button onclick="placeShanBet()" id="bet-btn-shan" class="main-btn">လောင်းမည်</button>
+        <button onclick="betShan()" id="btn-bet" style="width:100%; padding:15px; background:var(--gold); border:none; border-radius:30px; font-weight:bold;">လောင်းမည်</button>
     </div>
 
-    <div id="slot-panel" class="game-panel">
-        <div class="slot-machine"><span id="s1">🎰</span><span id="s2">🎰</span><span id="s3">🎰</span></div>
-        <button onclick="playSlot()" class="main-btn">SPIN</button>
-    </div>
-
-    <div id="dice-panel" class="game-panel">
-        <div class="dice-box" id="dice-val">🎲</div>
-        <button onclick="playDice('high')" class="main-btn" style="background: #28a745;">အကြီး (High)</button>
-        <button onclick="playDice('low')" class="main-btn" style="background: #dc3545;">အသေး (Low)</button>
-    </div>
-
-    <div id="wheel-panel" class="game-panel">
-        <div class="wheel-box" id="wheel-val">🎡</div>
-        <button onclick="playWheel()" class="main-btn">WHEEL SPIN</button>
-    </div>
-
-    <div id="wallet-panel" class="game-panel">
-        <div class="wallet-box">
+    <div id="wallet" class="panel">
+        <div class="wallet">
             <h3>ငွေသွင်း/ငွေထုတ် စနစ်</h3>
             <p>အက်မင်ဖုန်း: 09-XXXXXXXXX</p>
-            <input type="number" id="wallet-amt" placeholder="ပမာဏရိုက်ထည့်ပါ" style="width: 100%; padding: 10px; margin-bottom: 10px;">
-            <button class="wallet-btn in" onclick="alert('ငွေသွင်းရန် အက်မင်ထံသို့ တင်ပြပြီးပါပြီ')">ငွေသွင်းမည်</button>
-            <button class="wallet-btn out" onclick="alert('ငွေထုတ်ရန် အက်မင်ထံသို့ တင်ပြပြီးပါပြီ')">ငွေထုတ်မည်</button>
+            <input type="number" id="amt" placeholder="ပမာဏ" style="width:95%; padding:10px;">
+            <button class="btn-in" onclick="alert('တင်ပြပြီးပါပြီ')">ငွေသွင်းမည်</button>
+            <button class="btn-out" onclick="alert('တင်ပြပြီးပါပြီ')">ငွေထုတ်မည်</button>
         </div>
     </div>
+
+    <div id="slot" class="panel"><h2>🎰 SLOT MACHINE</h2><button style="padding:20px;">SPIN</button></div>
+    <div id="dice" class="panel"><h2>🎲 DICE GAME</h2><button style="padding:20px;">ROLL</button></div>
+    <div id="wheel" class="panel"><h2>🎡 WHEEL SPIN</h2><button style="padding:20px;">SPIN</button></div>
 </div>
 
 <script>
@@ -120,76 +86,55 @@
     const SB_KEY = "sb_publishable_wIgcdXqvZTr9MJeV6vAEYw_bMSsvD3J";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
     
-    let coins = 0, profileId = localStorage.getItem('game_user_id');
-    let timeRemaining = 30, hasPlacedBet = false;
+    let coins = 0, pId = localStorage.getItem('game_user_id'), time = 30, betted = false;
 
-    // --- ၁။ Timer စနစ် ---
-    function startTimer() {
+    // Timer Logic
+    function startLoop() {
         setInterval(() => {
-            timeRemaining--;
-            if (timeRemaining <= 0) { timeRemaining = 30; resetShanTable(); }
-            document.getElementById('timer-num').innerText = timeRemaining;
-            document.getElementById('timer-bar').style.width = (timeRemaining/30)*100 + "%";
+            time--;
+            if (time <= 0) { time = 30; reset(); }
+            document.getElementById('timer-txt').innerText = time;
+            document.getElementById('bar-fill').style.width = (time/30)*100 + "%";
 
-            if (timeRemaining > 10) {
-                document.getElementById('status-text').innerText = "လောင်းကြေးတင်နိုင်သည်";
-                document.getElementById('bet-btn-shan').disabled = hasPlacedBet;
-            } else if (timeRemaining === 10) {
-                document.getElementById('status-text').innerText = "ဖဲဝေနေသည်...";
-                document.getElementById('bet-btn-shan').disabled = true;
-                dealCards();
-            }
+            if (time === 10) { deal(); }
+            document.getElementById('btn-bet').disabled = (time <= 10 || betted);
         }, 1000);
     }
 
-    // --- ၂။ ဂိမ်း Logic များ (Shan, Slot, Dice, Wheel) ---
-    function dealCards() {
-        const ids = ['dealer-cards', 'p1-cards', 'p2-cards', 'me-cards'];
-        ids.forEach((id, i) => {
-            setTimeout(() => {
-                document.getElementById(id).innerHTML = draw() + draw();
-            }, i * 300);
+    function deal() {
+        ['d-cards', 'p1-cards', 'p2-cards', 'my-cards'].forEach((id, i) => {
+            setTimeout(() => { document.getElementById(id).innerHTML = draw()+draw(); }, i * 300);
         });
     }
 
     function draw() {
         const v = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'][Math.floor(Math.random()*13)];
         const s = ['♠','♥','♦','♣'][Math.floor(Math.random()*4)];
-        const color = (s==='♥'||s==='♦') ? 'red' : 'black';
-        return `<div class="card ${color}"><div>${v}${s}</div><div>${s}</div></div>`;
+        return `<div class="card ${(s==='♥'||s==='♦')?'red':''}"><div>${v}${s}</div></div>`;
     }
 
-    async function playSlot() {
-        const icons = ['💎', '🍒', '🔔', '⭐', '🍎'];
-        document.getElementById('s1').innerText = icons[Math.floor(Math.random()*5)];
-        document.getElementById('s2').innerText = icons[Math.floor(Math.random()*5)];
-        document.getElementById('s3').innerText = icons[Math.floor(Math.random()*5)];
-        alert("Spinning...");
-    }
-
-    // --- ၃။ UI & System ---
-    function switchTab(tab) {
-        document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(tab + '-panel').classList.add('active');
-        document.getElementById('btn-' + tab).classList.add('active');
+    function tab(name) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById(name).classList.add('active');
+        document.getElementById('t-'+name).classList.add('active');
     }
 
     async function init() {
-        if (!profileId) return;
-        const { data } = await supabaseClient.from('profiles').select('*').eq('id', profileId).maybeSingle();
+        if (!pId) return;
+        const { data } = await supabaseClient.from('profiles').select('*').eq('id', pId).maybeSingle();
         if (data) {
             coins = data.coins;
-            document.getElementById('display-user').innerText = data.username;
-            document.getElementById('balance').innerText = coins.toLocaleString();
-            startTimer();
+            document.getElementById('user-display').innerText = data.username;
+            document.getElementById('coin-display').innerText = coins.toLocaleString();
+            startLoop();
         }
     }
 
-    function resetShanTable() {
-        hasPlacedBet = false;
-        document.getElementById('my-bet-label').innerText = "";
-        ['dealer-cards', 'p1-cards', 'p2-cards', 'me-cards'].forEach(id => document.getElementById(id).innerHTML = "");
+    function reset() { 
+        betted = false; 
+        document.getElementById('my-bet').innerText = "";
+        ['d-cards', 'p1-cards', 'p2-cards', 'my-cards'].forEach(id => document.getElementById(id).innerHTML = "");
     }
 
     init();
