@@ -3,87 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Casino - Nang Nu Edition</title>
+    <title>Golden Casino - Pro Edition</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div id="auth-page" class="app-container">
-        <h1 style="color: gold; text-align: center;">GOLDEN CASINO</h1>
-        <div class="game-box">
+        <h1 class="logo">GOLDEN CASINO</h1>
+        <div class="game-box auth-box">
             <h2 id="auth-title">CREATE ACCOUNT</h2>
-            <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
+            <div class="input-field">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" placeholder="Username">
+            </div>
+            <div class="input-field">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Password">
+            </div>
             <button onclick="handleAuth()" id="auth-btn" class="action-btn">အကောင့်ဖွင့်မည်</button>
-            <p onclick="toggleAuth()" id="auth-toggle" style="cursor:pointer; margin-top:15px; color:#ccc;">အကောင့်ရှိပြီးသားလား? <span style="color: gold;">Login ဝင်ပါ</span></p>
+            <p onclick="toggleAuth()" id="auth-toggle">အကောင့်ရှိပြီးသားလား? <span>Login ဝင်ပါ</span></p>
         </div>
     </div>
 
     <div id="game-page" class="app-container" style="display: none;">
         <div class="game-header">
-            <div><i class="fas fa-user-circle"></i> <span id="display-user">...</span></div>
+            <div class="profile-info">
+                <i class="fas fa-user-circle"></i> <span id="display-user">...</span>
+                <button onclick="handleLogout()" class="logout-btn">Logout</button>
+            </div>
             <div class="balance-box">💰 <span id="balance">0</span> K</div>
-            <button onclick="handleLogout()" class="logout-link">Logout</button>
         </div>
 
-        <div class="bet-selection">
-            လောင်းကြေး: <select id="bet-amount" class="bet-input">
-                <option value="100">100 K</option>
+        <div class="game-nav-container">
+            <button onclick="switchGame('shan')" id="btn-shan" class="nav-item active">ရှမ်းကိုးမီး</button>
+            <button onclick="switchGame('slot')" id="btn-slot" class="nav-item">Slot</button>
+            <button onclick="switchGame('dice')" id="btn-dice" class="nav-item">Dice</button>
+            <button onclick="switchGame('wheel')" id="btn-wheel" class="nav-item">Wheel</button>
+        </div>
+
+        <div class="bet-control">
+            BET: <select id="bet-amount" class="bet-select">
                 <option value="500">500 K</option>
                 <option value="1000">1,000 K</option>
                 <option value="5000">5,000 K</option>
+                <option value="10000">10,000 K</option>
             </select>
         </div>
 
-        <div class="game-nav">
-            <button onclick="switchGame('slot')" id="btn-slot" class="nav-item active">SLOT</button>
-            <button onclick="switchGame('dice')" id="btn-dice" class="nav-item">DICE</button>
-            <button onclick="switchGame('wheel')" id="btn-wheel" class="nav-item">WHEEL</button>
+        <div id="shan-area" class="game-panel">
+            <div class="card-table">
+                <div class="dealer-side">
+                    <p>Dealer</p>
+                    <div id="dealer-cards" class="cards-row">🂠 🂠</div>
+                </div>
+                <div class="player-side">
+                    <div id="player-cards" class="cards-row">🂠 🂠</div>
+                    <p>You</p>
+                </div>
+            </div>
+            <button onclick="playShan()" id="shan-btn" class="action-btn gold-btn">ကစားမည်</button>
         </div>
 
-        <div id="slot-area" class="game-display">
-            <div class="slot-machine">
-                <span id="r1">🎰</span> <span id="r2">🎰</span> <span id="r3">🎰</span>
-            </div>
-            <button onclick="playSlot()" class="action-btn spin-btn">SPIN NOW</button>
+        <div id="slot-area" class="game-panel" style="display:none;">
+            <div class="slot-reels"><span id="r1">🎰</span><span id="r2">🎰</span><span id="r3">🎰</span></div>
+            <button onclick="playSlot()" class="action-btn spin-btn">SPIN</button>
         </div>
 
-        <div id="dice-area" class="game-display" style="display: none;">
-            <div id="dice-view" style="font-size: 5rem; color: gold; margin-bottom: 20px;">🎲</div>
-            <div style="display: flex; gap: 10px;">
-                <button onclick="playDice('high')" class="action-btn" style="background:#28a745;">အကြီး (4,5,6)</button>
-                <button onclick="playDice('low')" class="action-btn" style="background:#dc3545;">အသေး (1,2,3)</button>
+        <div id="dice-area" class="game-panel" style="display:none;">
+            <div id="dice-view">🎲</div>
+            <div class="dice-controls">
+                <button onclick="playDice('high')" class="dice-btn high">အကြီး</button>
+                <button onclick="playDice('low')" class="dice-btn low">အသေး</button>
             </div>
         </div>
 
-        <div id="wheel-area" class="game-display" style="display: none;">
-            <div class="wheel-box">
-                <div id="pointer">▼</div>
-                <div id="wheel-inner">🎡</div>
-            </div>
+        <div id="wheel-area" class="game-panel" style="display:none;">
+            <div class="wheel-box"><div id="pointer">▼</div><div id="wheel-inner">🎡</div></div>
             <button onclick="playWheel()" class="action-btn">WHEEL SPIN</button>
         </div>
 
-        <div class="wallet-footer">
-            <button onclick="openWallet('deposit')" class="w-btn dep">ငွေသွင်း</button>
-            <button onclick="openWallet('withdraw')" class="w-btn wit">ငွေထုတ်</button>
+        <div class="wallet-actions">
+            <button onclick="openWallet('deposit')" class="w-btn dep"><i class="fas fa-plus-circle"></i> ငွေသွင်း</button>
+            <button onclick="openWallet('withdraw')" class="w-btn wit"><i class="fas fa-minus-circle"></i> ငွေထုတ်</button>
         </div>
     </div>
 
     <div id="wallet-modal" class="modal">
         <div class="modal-content">
             <h3 id="w-title">ငွေသွင်းမည်</h3>
-            <div class="bank-card">Kpay/Wave: 09680575421<br>Name: Thant Naing Aye</div>
-            <input type="number" id="w-amount" placeholder="ပမာဏ">
-            <input type="text" id="w-phone" placeholder="ဖုန်းနံပါတ်/ID">
-            <button onclick="submitWallet()" class="action-btn">အတည်ပြုမည်</button>
-            <button onclick="closeWallet()" class="action-btn grey">ပိတ်ပါ</button>
+            <div class="payment-methods">
+                <div class="pay-card active">
+                    <img src="https://image.pngaaa.com/832/4994832-middle.png" width="30"> KPay / Wave
+                </div>
+            </div>
+            <div class="bank-details">
+                <p>Account: 09680575421</p>
+                <p>Name: Thant Naing Aye</p>
+            </div>
+            <input type="number" id="w-amount" placeholder="ပမာဏ (အနည်းဆုံး ၅၀၀၀)">
+            <input type="text" id="w-phone" placeholder="KPay ဖုန်းနံပါတ် သို့မဟုတ် လုပ်ငန်းစဉ်နံပါတ်">
+            <p style="font-size: 0.7rem; color: #aaa;">* ငွေသွင်းပြီး ၅ မိနစ်အတွင်း အတည်ပြုပေးပါမည်။</p>
+            <div class="modal-btns">
+                <button onclick="submitWallet()" class="action-btn">အတည်ပြုမည်</button>
+                <button onclick="closeWallet()" class="action-btn grey">ပိတ်ပါ</button>
+            </div>
         </div>
     </div>
 
-    <audio id="snd-spin" src="https://www.soundjay.com/misc/sounds/slot-machine-payout-01.mp3"></audio>
-    <audio id="snd-win" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
-    <audio id="snd-dice" src="https://www.soundjay.com/misc/sounds/dice-roll-01.mp3"></audio>
+    <audio id="snd-spin" preload="auto" src="https://actions.google.com/sounds/v1/cartoon/clinker_win.ogg"></audio>
+    <audio id="snd-win" preload="auto" src="https://actions.google.com/sounds/v1/foley/beaming_side_to_side.ogg"></audio>
+    <audio id="snd-dice" preload="auto" src="https://actions.google.com/sounds/v1/foley/dice_throw_on_table.ogg"></audio>
+    <audio id="snd-card" preload="auto" src="https://actions.google.com/sounds/v1/foley/card_shuffle.ogg"></audio>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
