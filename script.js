@@ -84,7 +84,7 @@ function showSignup() {
     `;
 }
 
-// ဒီအပိုင်းမှာ error တက်နေတာကို ပြင်ထားပါတယ်
+// အကောင့်သစ်ဖွင့်ခြင်း Logic (Fixed)
 async function handleSignup() {
     const newUser = document.getElementById('reg-user').value.trim();
     const newPass = document.getElementById('reg-pass').value;
@@ -94,8 +94,8 @@ async function handleSignup() {
     }
 
     try {
-        // အမည်တူ ရှိမရှိ အရင်စစ်ဆေးခြင်း
-        const { data: existingUser, error: checkError } = await _supabase
+        // ၁။ အမည်တူ ရှိမရှိ အရင်စစ်ဆေးခြင်း
+        const { data: existingUser } = await _supabase
             .from('profiles')
             .select('username')
             .eq('username', newUser);
@@ -104,7 +104,7 @@ async function handleSignup() {
             return alert("ဒီအမည်က ရှိပြီးသားဖြစ်နေလို့ တခြားအမည်တစ်ခု သုံးပေးပါ။");
         }
 
-        // အကောင့်သစ် ထည့်သွင်းခြင်း
+        // ၂။ အကောင့်သစ် ထည့်သွင်းခြင်း
         const { error: insertError } = await _supabase
             .from('profiles')
             .insert([{ 
@@ -114,19 +114,19 @@ async function handleSignup() {
             }]);
 
         if (insertError) {
-            console.error("Insert Error:", insertError);
-            alert("Database ထဲ ထည့်မရဖြစ်နေပါတယ်။ Table structure ကို ပြန်စစ်ကြည့်ပါ။");
-        } else {
-            alert("အကောင့်ဖွင့်ခြင်း အောင်မြင်ပါသည်။");
-            localStorage.setItem('game_username', newUser);
-            username = newUser;
-            coins = 5000;
-            closeWallet();
-            updateUI();
+            throw insertError;
         }
+
+        alert("အကောင့်ဖွင့်ခြင်း အောင်မြင်ပါသည်။");
+        localStorage.setItem('game_username', newUser);
+        username = newUser;
+        coins = 5000;
+        closeWallet();
+        updateUI();
+
     } catch (err) {
-        console.error("Unexpected Error:", err);
-        alert("မထင်မှတ်ထားသော အမှားတစ်ခု ရှိနေပါသည်။");
+        console.error("Signup error:", err);
+        alert("အမှားတစ်ခုရှိနေပါသည်- " + err.message);
     }
 }
 
