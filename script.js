@@ -1,6 +1,6 @@
 // ၁။ Supabase Keys များ
 const SB_URL = "https://mgxhoraoblmrqvyjaiw.supabase.co"; 
-const SB_KEY = "sb_publishable_WlgcdXqvZTr9MJeV6vAEYw_bMSsvD3J"; 
+const SB_KEY = "sb_publishable_wlgcdXqvZTr9MJeV6vAEYw_bMSsvD3J"; 
 const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
 let coins = 0;
