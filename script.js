@@ -1,21 +1,17 @@
-// Supabase Configuration
+// Supabase Setup
 const SB_URL = "https://mgxhoraoablmrqvyjaiw.supabase.co";
 const SB_KEY = "sb_publishable_wIgcdXqvZTr9MJeV6vAEYw_bMSsvD3J";
 const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-// Game Variables
 let coins = 0;
 let profileId = localStorage.getItem('game_user_id');
-let isLogin = false;
 let timeRemaining = 30;
 let hasPlacedBet = false;
-let currentGameState = "BETTING"; // BETTING or DEALING
+let currentGameState = "BETTING";
 
-const suits = ['♠', '♥', '♦', '♣'];
-const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-
-// --- ၁။ Timer စနစ် (၂၄ နာရီပတ်လုံး အလိုလိုလည်ပတ်ရန်) ---
-function startLiveLoop() {
+// --- ၁။ Timer စနစ် (Auto Loop) ---
+function startLiveTimer() {
+    console.log("Timer Started");
     setInterval(() => {
         timeRemaining--;
         if (timeRemaining <= 0) {
@@ -25,7 +21,7 @@ function startLiveLoop() {
         
         updateTimerUI();
 
-        // ၁၀ စက္ကန့်အလိုမှာ ဖဲဝေခြင်းကို စတင်မည်
+        // ၁၀ စက္ကန့်အလိုမှာ ဖဲဝေမည်
         if (timeRemaining === 10) {
             currentGameState = "DEALING";
             startDealing();
@@ -42,156 +38,99 @@ function updateTimerUI() {
     if(bar) bar.style.width = (timeRemaining / 30) * 100 + "%";
 
     if (timeRemaining > 10) {
-        status.innerText = "လောင်းကြေးတင်ရန် အချိန်ကျန်";
-        status.style.color = "#28a745";
+        if(status) status.innerText = "လောင်းကြေးတင်ရန် အချိန်ကျန်";
         document.getElementById('bet-btn').disabled = hasPlacedBet;
-        currentGameState = "BETTING";
     } else {
-        status.innerText = "ဖဲဝေနေသည်... ခေတ္တစောင့်ပါ";
-        status.style.color = "#dc3545";
+        if(status) status.innerText = "ဖဲဝေနေသည်... ခေတ္တစောင့်ပါ";
         document.getElementById('bet-btn').disabled = true;
     }
 }
 
-// --- ၂။ ဖဲဝေခြင်း Logic (ပုံထဲကအတိုင်း Fan Style ဖြန့်ဝေရန်) ---
+// --- ၂။ ဖဲဝေခြင်း Logic (Fan Style) ---
 function startDealing() {
     document.getElementById('snd-card').play();
-    const seatIds = ['dealer-cards', 'p1-cards', 'p2-cards', 'p3-cards', 'p4-cards', 'me-cards'];
-    let finalScores = {};
+    const ids = ['dealer-cards', 'p1-cards', 'p2-cards', 'p3-cards', 'p4-cards', 'me-cards'];
+    let scores = {};
 
-    seatIds.forEach((id, index) => {
+    ids.forEach((id, index) => {
         setTimeout(() => {
-            const card1 = getRandomCard();
-            const card2 = getRandomCard();
+            const v1 = Math.floor(Math.random()*13), s1 = Math.floor(Math.random()*4);
+            const v2 = Math.floor(Math.random()*13), s2 = Math.floor(Math.random()*4);
             
-            const cardHTML = renderCard(card1) + renderCard(card2);
-            document.getElementById(id).innerHTML = cardHTML;
-            
-            finalScores[id] = (getCardValue(card1.v) + getCardValue(card2.v)) % 10;
+            document.getElementById(id).innerHTML = renderCard(v1, s1) + renderCard(v2, s2);
+            scores[id] = (getVal(v1) + getVal(v2)) % 10;
 
-            // အားလုံးဝေပြီးလို့ ကိုယ့်အလှည့်ရောက်ရင် ရလဒ်တွက်မည်
-            if (index === seatIds.length - 1 && hasPlacedBet) {
-                calculateResult(finalScores);
+            if (index === ids.length - 1 && hasPlacedBet) {
+                checkWinLoss(scores);
             }
-        }, index * 300); // တစ်ယောက်ချင်းစီကို Delay လေးနဲ့ ဝေပေးခြင်း
+        }, index * 400);
     });
 }
 
-function getRandomCard() {
-    const v = values[Math.floor(Math.random() * values.length)];
-    const s = suits[Math.floor(Math.random() * suits.length)];
-    const color = (s === '♥' || s === '♦') ? 'red' : 'black';
-    return { v, s, color };
-}
-
-function renderCard(card) {
-    return `<div class="card ${card.color}">
-                <div class="t">${card.v}${card.s}</div>
-                <div class="m">${card.s}</div>
+function renderCard(vIdx, sIdx) {
+    const suits = ['♠', '♥', '♦', '♣'], values = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+    const s = suits[sIdx], v = values[vIdx];
+    return `<div class="card ${(s==='♥'||s==='♦')?'red':'black'}">
+                <div class="v">${v}${s}</div>
+                <div class="s">${s}</div>
             </div>`;
 }
 
-function getCardValue(v) {
-    if (['10', 'J', 'Q', 'K'].includes(v)) return 0;
-    if (v === 'A') return 1;
-    return parseInt(v);
-}
+function getVal(n) { return (n >= 9) ? 0 : n + 1; }
 
-// --- ၃။ လောင်းကြေးနှင့် ရလဒ်ပိုင်း ---
+// --- ၃။ Betting & Database Logic ---
 async function placeLiveBet() {
-    const betAmt = parseInt(document.getElementById('bet-amount').value);
-    if (coins < betAmt) return alert("ငွေမလုံလောက်ပါ");
-    if (currentGameState !== "BETTING") return alert("နောက်တစ်ပွဲစောင့်ပါ");
-
-    coins -= betAmt;
+    const bet = parseInt(document.getElementById('bet-amount').value);
+    if (coins < bet) return alert("ငွေမလုံလောက်ပါ");
+    
+    coins -= bet;
     hasPlacedBet = true;
-    updateBalanceUI();
-    document.getElementById('my-bet-label').innerText = `(${betAmt} K)`;
+    updateUI();
+    document.getElementById('my-bet-label').innerText = bet + " K";
     document.getElementById('bet-btn').disabled = true;
 }
 
-function calculateResult(scores) {
-    const myScore = scores['me-cards'];
-    const dealerScore = scores['dealer-cards'];
-    const betAmt = parseInt(document.getElementById('bet-amount').value);
-
+function checkWinLoss(scores) {
+    const my = scores['me-cards'], dl = scores['dealer-cards'];
+    const bet = parseInt(document.getElementById('bet-amount').value);
+    
     setTimeout(() => {
-        if (myScore > dealerScore) {
-            let winMultiplier = (myScore >= 8) ? 3 : 2;
-            coins += betAmt * winMultiplier;
+        if (my > dl) {
+            let mult = (my >= 8) ? 3 : 2;
+            coins += bet * mult;
             document.getElementById('snd-win').play();
-            alert(`နိုင်ပါသည်! သင်: ${myScore} / ဒိုင်: ${dealerScore}`);
-        } else if (myScore === dealerScore) {
-            coins += betAmt;
-            alert("သရေကျပါသည်");
+            alert("နိုင်ပါသည်!");
+        } else if (my === dl) {
+            coins += bet;
+            alert("သရေ");
         } else {
-            alert(`ဒိုင်စားပါသည်! သင်: ${myScore} / ဒိုင်: ${dealerScore}`);
+            alert("ဒိုင်စားပါသည်");
         }
-        syncWithDatabase();
-    }, 1000);
+        syncDB();
+    }, 1200);
 }
 
-// --- ၄။ System Functions (Database & UI) ---
+// --- ၄။ Initialization ---
 async function init() {
-    if (!profileId) {
-        document.getElementById('auth-page').style.display = 'block';
-        return;
-    }
-    
-    const { data, error } = await supabaseClient.from('profiles').select('*').eq('id', profileId).maybeSingle();
+    if (!profileId) return;
+    const { data } = await supabaseClient.from('profiles').select('*').eq('id', profileId).maybeSingle();
     if (data) {
         coins = data.coins;
         document.getElementById('display-user').innerText = data.username;
-        document.getElementById('auth-page').style.display = 'none';
-        document.getElementById('game-page').style.display = 'block';
-        updateBalanceUI();
-        startLiveLoop(); // Timer စတင်ခြင်း
+        updateUI();
+        startLiveTimer(); // ပင်မ Timer စတင်နှိုးခြင်း
     }
 }
 
-async function syncWithDatabase() {
-    await supabaseClient.from('profiles').update({ coins: coins }).eq('id', profileId);
-    updateBalanceUI();
-}
-
-function updateBalanceUI() {
-    document.getElementById('balance').innerText = coins.toLocaleString();
-}
-
+function updateUI() { document.getElementById('balance').innerText = coins.toLocaleString(); }
+async function syncDB() { await supabaseClient.from('profiles').update({ coins: coins }).eq('id', profileId); updateUI(); }
 function resetTable() {
     hasPlacedBet = false;
     document.getElementById('my-bet-label').innerText = "";
-    const seatIds = ['dealer-cards', 'p1-cards', 'p2-cards', 'p3-cards', 'p4-cards', 'me-cards'];
-    seatIds.forEach(id => {
+    ['dealer-cards', 'p1-cards', 'p2-cards', 'p3-cards', 'p4-cards', 'me-cards'].forEach(id => {
         const el = document.getElementById(id);
         if(el) el.innerHTML = "";
     });
 }
 
-// Auth Toggle & Login Logic
-function toggleAuth() {
-    isLogin = !isLogin;
-    document.getElementById('auth-title').innerText = isLogin ? "LOGIN" : "CREATE ACCOUNT";
-    document.getElementById('auth-btn').innerText = isLogin ? "ဝင်ရောက်မည်" : "အကောင့်ဖွင့်မည်";
-}
-
-async function handleAuth() {
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-    
-    if(!isLogin) {
-        const { data } = await supabaseClient.from('profiles').insert([{username: user, password: pass, coins: 5000}]).select().single();
-        if(data) { localStorage.setItem('game_user_id', data.id); location.reload(); }
-    } else {
-        const { data } = await supabaseClient.from('profiles').select('*').eq('username', user).eq('password', pass).maybeSingle();
-        if(data) { localStorage.setItem('game_user_id', data.id); location.reload(); } else alert("အချက်အလက်မှားယွင်းနေပါသည်။");
-    }
-}
-
-function handleLogout() {
-    localStorage.clear();
-    location.reload();
-}
-
-// Start the App
 init();
