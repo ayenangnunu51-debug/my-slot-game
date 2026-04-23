@@ -3,62 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nang Nu Official Casino</title>
+    <title>Lion Burma Clone</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app">
-        <div class="header">
-            <div>👤 <span id="user-display">...</span></div>
-            <div style="color: gold;">💰 <span id="coin-display">5000</span> K</div>
-            <button onclick="logout()" class="exit-btn">Logout</button>
-        </div>
-
-        <div class="nav">
-            <button onclick="tab('shan')" id="t-shan" class="active">ရှမ်းကိုးမီး</button>
-            <button onclick="tab('slot')" id="t-slot">SLOT ဂိမ်း</button>
-            <button onclick="tab('wallet')" id="t-wallet">WALLET</button>
-        </div>
-
-        <div id="shan" class="panel active">
-            <div class="timer-section">
-                <div id="status">လောင်းကြေးတင်နိုင်သည်</div>
-                <div class="bar-bg"><div id="bar"></div></div>
-                <div id="timer-num">30</div>
-            </div>
-            <div class="casino-table">
-                <div class="seat dealer"><span class="avatar">👩‍💼</span><div id="d-cards" class="hand"></div>ဒိုင်</div>
-                <div class="seat p1"><span class="avatar">👨‍🦰</span><div id="p1-cards" class="hand"></div>P1</div>
-                <div class="seat p2"><span class="avatar">👱‍♀️</span><div id="p2-cards" class="hand"></div>P2</div>
-                <div class="seat me"><span class="avatar">😎</span><div id="my-cards" class="hand"></div>YOU</div>
-            </div>
-            <div class="controls">
-                <select id="bet-amt"><option value="500">500 K</option><option value="1000">1000 K</option></select>
-                <button onclick="placeBet()" id="bet-btn">လောင်းမည်</button>
-            </div>
-        </div>
-
-        <div id="slot" class="panel">
-            <div class="slot-machine">
-                <div class="reels">
-                    <div id="s1" class="reel">🎰</div>
-                    <div id="s2" class="reel">🎰</div>
-                    <div id="s3" class="reel">🎰</div>
-                </div>
-                <h3 id="slot-msg">SPIN ကိုနှိပ်ပါ</h3>
-                <button onclick="spinSlot()" id="spin-btn">SPIN (100 K)</button>
-            </div>
-        </div>
-
-        <div id="wallet" class="panel">
-            <div class="wallet-ui">
-                <h3>ငွေသွင်းရန် (Kpay: 09-XXXXXXX)</h3>
-                <input type="number" id="in-amt" placeholder="ပမာဏ">
-                <input type="text" id="in-id" placeholder="လုပ်ငန်းစဉ်နံပါတ်">
-                <button onclick="alert('တင်ပြပြီးပါပြီ')">တင်ပြမည်</button>
-            </div>
+    <div class="top-header">
+        <div class="logo">LION BURMA</div>
+        <div class="auth-box">
+            <input type="text" placeholder="အမည်">
+            <input type="password" placeholder="လျှို့ဝှက်နံပါတ်">
+            <button class="login-btn">ဝင်မည်</button>
         </div>
     </div>
-    <script src="script.js"></script>
+    <div class="category-nav">
+        <div class="cat-item active">🏠<br>HOME</div>
+        <div class="cat-item">🎰<br>စလော့</div>
+        <div class="cat-item">🃏<br>ကာစီနို</div>
+        <div class="cat-item">⚽<br>အားကစား</div>
+        <div class="cat-item">🐟<br>ငါးဖမ်း</div>
+    </div>
+    <div class="main-banner">
+        <div class="promo-text">
+            <h2>မန်ဘာသစ် 50%</h2>
+            <p>နေ့စဉ်ဘောနပ် 20%</p>
+            <div class="cashback">CASH BACK 5%</div>
+        </div>
+    </div>
+    <div class="bottom-menu">
+        <div class="menu-item">🎁<br>ပရိုမိုးရှင်း</div>
+        <div class="menu-item">💬<br>တိုက်ရိုက်စကားပြော</div>
+        <div class="menu-item main-btn">🏠<br>ပင်မ</div>
+        <div class="menu-item">💰<br>ငွေသွင်း</div>
+        <div class="menu-item">💵<br>ငွေထုတ်</div>
+    </div>
 </body>
 </html>
