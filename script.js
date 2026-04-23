@@ -81,3 +81,35 @@ async function spinSlot() {
 
 // Web စတက်တာနဲ့ အလုပ်လုပ်ခိုင်းခြင်း
 initGame();
+// Wallet Panel ကို ဖွင့်ရန်
+function showWallet(type) {
+    const panel = document.getElementById('wallet-panel');
+    const body = document.getElementById('wallet-body');
+    panel.style.display = 'flex';
+
+    if (type === 'deposit') {
+        body.innerHTML = `
+            <h3 style="color:gold;">ငွေသွင်းရန်</h3>
+            <p>Kpay / Wave: 09-XXXXXXXXX</p>
+            <input type="number" id="dep-amount" placeholder="ပမာဏ">
+            <button onclick="submitDeposit()" class="login-btn">တင်ပြမည်</button>
+        `;
+    } else if (type === 'withdraw') {
+        body.innerHTML = `
+            <h3 style="color:gold;">ငွေထုတ်ရန်</h3>
+            <p>လက်ကျန်ငွေ: ${coins} K</p>
+            <input type="number" id="wit-amount" placeholder="ပမာဏ">
+            <button onclick="submitWithdraw()" class="login-btn">ထုတ်မည်</button>
+        `;
+    }
+}
+
+function closeWallet() {
+    document.getElementById('wallet-panel').style.display = 'none';
+}
+
+// ငွေသွင်းတင်ပြခြင်း (လောလောဆယ် Alert ပဲ ပြထားပါတယ်)
+function submitDeposit() {
+    alert("ငွေသွင်းလွှာ တင်ပြပြီးပါပြီ။ ခေတ္တစောင့်ဆိုင်းပေးပါ။");
+    closeWallet();
+}
