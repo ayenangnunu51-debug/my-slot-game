@@ -1,23 +1,24 @@
 body { background: #0a0a0a; color: white; font-family: sans-serif; margin: 0; text-align: center; }
-.header { display: flex; justify-content: space-between; padding: 10px; background: #16162d; border-radius: 10px; margin: 10px; }
-.nav { display: flex; gap: 5px; padding: 0 10px; }
-.nav button { flex: 1; padding: 12px; background: #222; border: none; color: white; border-radius: 5px; }
-.nav button.active { background: gold; color: black; font-weight: bold; }
-.panel { display: none; padding: 15px; }
-.panel.active { display: block; }
+.header { display: flex; justify-content: space-between; padding: 12px; background: #16162d; margin-bottom: 5px; }
+.exit-btn { background: #ff4444; border: none; color: white; border-radius: 4px; padding: 5px 10px; cursor: pointer; }
+.nav { display: flex; gap: 4px; padding: 5px; }
+.nav button { flex: 1; padding: 12px; background: #222; border: none; color: white; cursor: pointer; font-size: 13px; }
+.nav button.active { background: gold; color: black; font-weight: bold; border-radius: 5px; }
+.tab-panel { display: none; padding: 15px; }
+.tab-panel.active { display: block; }
 
-/* Table */
-.casino-table { background: radial-gradient(circle, #1a4a2e 0%, #0d2b1a 100%); height: 350px; border-radius: 150px; position: relative; border: 8px solid #4e342e; margin: 20px auto; }
-.seat { position: absolute; text-align: center; font-size: 11px; }
+/* Table Style */
+.casino-table { background: radial-gradient(circle, #1a4a2e 0%, #0d2b1a 100%); height: 320px; border-radius: 150px; position: relative; border: 8px solid #4e342e; margin: 15px auto; max-width: 450px; }
+.seat { position: absolute; font-size: 12px; }
 .dealer { top: 5%; left: 50%; transform: translateX(-50%); }
 .me { bottom: 5%; left: 50%; transform: translateX(-50%); }
-.avatar { font-size: 24px; display: block; }
+.p1 { top: 30%; left: 10%; } .p2 { top: 30%; right: 10%; }
+.icon { font-size: 24px; display: block; }
 
 /* Slot UI */
-.slot-box { background: #1a1a1a; padding: 20px; border-radius: 15px; border: 3px solid gold; }
-.slot-reels { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
-.reel { width: 70px; height: 90px; background: white; color: black; font-size: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
-.spin-btn { background: linear-gradient(gold, #ccaa00); padding: 15px 30px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; }
+.slot-ui { background: #1a1a1a; padding: 30px; border-radius: 20px; border: 3px solid gold; box-shadow: inset 0 0 20px black; }
+.reels { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+.reel { width: 80px; height: 100px; background: white; color: black; font-size: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; border: 3px solid #333; }
+#spin-btn { background: linear-gradient(#ff0, #f90); padding: 15px 40px; border: none; border-radius: 30px; font-weight: bold; font-size: 18px; cursor: pointer; box-shadow: 0 4px #950; }
 
-/* Cards */
-.card { width: 25px; height: 38px; background: white; color: black; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin: 2px; font-size: 10px; }
+.card { width: 28px; height: 42px; background: white; color: black; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin: 2px; font-size: 12px; border: 1px solid #999; }
