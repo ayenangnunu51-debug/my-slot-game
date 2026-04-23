@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="my">
-<head><meta charset="UTF-8"><title>အကောင့်သစ်ဖွင့်ရန်</title></head>
-<body style="background:#0a0a0a; color:white; text-align:center; padding-top:100px;">
-    <h2>Casino Signup</h2>
-    <input type="text" id="name" placeholder="အမည်ရိုက်ပါ" style="padding:10px;"><br><br>
-    <button onclick="register()" style="padding:10px 20px; background:gold; border:none; cursor:pointer;">START GAME</button>
-
+<head>
+    <meta charset="UTF-8">
+    <title>Signup - Nang Nu Casino</title>
+    <style>
+        body { background: #0a0a0a; color: white; text-align: center; font-family: sans-serif; padding-top: 100px; }
+        .box { background: #16162d; width: 300px; margin: auto; padding: 30px; border-radius: 15px; border: 2px solid gold; }
+        input { width: 90%; padding: 12px; margin: 15px 0; border-radius: 5px; border: none; }
+        button { width: 100%; padding: 12px; background: gold; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>အကောင့်အသစ်ဖွင့်ရန်</h2>
+        <input type="text" id="username" placeholder="အမည်ရိုက်ပါ">
+        <button onclick="register()">ဂိမ်းစတင်မည် (REGISTER)</button>
+    </div>
     <script>
         function register() {
-            const name = document.getElementById('name').value;
+            const name = document.getElementById('username').value;
             if(!name) return alert("အမည်ထည့်ပါ");
             localStorage.setItem('game_user_id', 'user_' + Date.now());
+            localStorage.setItem('game_username', name);
             window.location.href = 'index.html';
         }
     </script>
