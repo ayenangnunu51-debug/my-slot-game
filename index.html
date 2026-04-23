@@ -3,65 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nang Nu Professional Casino</title>
+    <title>Nang Nu Pro Casino</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="app">
+    <div class="app-container">
         <div class="header">
             <div>👤 <span id="user-display">...</span></div>
             <div style="color: gold;">💰 <span id="coin-display">5000</span> K</div>
-            <button onclick="logout()" class="logout-btn">ထွက်ရန်</button>
+            <button onclick="logout()" class="exit-btn">Logout</button>
         </div>
 
         <div class="nav">
-            <button onclick="tab('shan')" id="t-shan" class="active">Live ရှမ်းကိုးမီး</button>
-            <button onclick="tab('slot')" id="t-slot">SLOT</button>
-            <button onclick="tab('wallet')" id="t-wallet">WALLET</button>
+            <button onclick="switchTab('shan')" id="t-shan" class="active">Live ရှမ်းကိုးမီး</button>
+            <button onclick="switchTab('slot')" id="t-slot">SLOT ဂိမ်း</button>
+            <button onclick="switchTab('wallet')" id="t-wallet">WALLET</button>
         </div>
 
-        <div id="shan" class="panel active">
-            <div class="timer-area">
+        <div id="shan" class="tab-panel active">
+            <div class="timer-ui">
                 <div id="status">လောင်းကြေးတင်နိုင်သည်</div>
-                <div class="bar-bg"><div id="bar"></div></div>
+                <div class="progress-bg"><div id="bar"></div></div>
                 <div id="timer-num">30</div>
             </div>
             <div class="casino-table">
-                <div class="seat dealer"><span class="avatar">👩‍💼</span><div id="d-cards" class="hand"></div>ဒိုင်</div>
-                <div class="seat p1"><span class="avatar">👨‍🦰</span><div id="p1-cards" class="hand"></div>P1</div>
-                <div class="seat p2"><span class="avatar">👱‍♀️</span><div id="p2-cards" class="hand"></div>P2</div>
-                <div class="seat me"><span class="avatar">😎</span><div id="my-cards" class="hand"></div>YOU <span id="bet-label"></span></div>
+                <div class="seat dealer"><span class="icon">👩‍💼</span><div id="d-cards" class="hand"></div>ဒိုင်</div>
+                <div class="seat p1"><span class="icon">👨‍🦰</span><div id="p1-cards" class="hand"></div>P1</div>
+                <div class="seat p2"><span class="icon">👱‍♀️</span><div id="p2-cards" class="hand"></div>P2</div>
+                <div class="seat me"><span class="icon">😎</span><div id="my-cards" class="hand"></div>YOU</div>
             </div>
-            <div class="controls">
+            <div class="bet-area">
                 <select id="bet-amt"><option value="500">500 K</option><option value="1000">1000 K</option></select>
                 <button onclick="placeBet()" id="bet-btn">လောင်းမည်</button>
             </div>
         </div>
 
-        <div id="slot" class="panel">
-            <div class="slot-box">
-                <div class="slot-reels">
+        <div id="slot" class="tab-panel">
+            <div class="slot-ui">
+                <div class="reels">
                     <div id="s1" class="reel">🎰</div>
                     <div id="s2" class="reel">🎰</div>
                     <div id="s3" class="reel">🎰</div>
                 </div>
-                <h3 id="slot-status">လှည့်ရန် SPIN ကိုနှိပ်ပါ</h3>
-                <button onclick="spinSlot()" id="spin-btn" class="spin-btn">SPIN (100 K)</button>
+                <h3 id="slot-msg" style="color: gold;">Ready to Spin!</h3>
+                <button onclick="spinSlot()" id="spin-btn">SPIN (100 K)</button>
             </div>
         </div>
 
-        <div id="wallet" class="panel">
-            <div class="wallet-ui">
-                <h3>ငွေသွင်းရန် (Kpay: 09-XXXXXXXXX)</h3>
-                <input type="number" id="in-amt" placeholder="သွင်းမည့် ပမာဏ">
-                <input type="text" id="in-id" placeholder="လုပ်ငန်းစဉ်နံပါတ် (နောက်ဆုံး ၆ လုံး)">
-                <button onclick="submitDeposit()" class="in-btn">ငွေသွင်းတင်ပြမည်</button>
-                <hr>
-                <h3>ငွေထုတ်ရန်</h3>
-                <input type="number" id="out-amt" placeholder="ထုတ်မည့် ပမာဏ">
-                <input type="text" id="out-phone" placeholder="လက်ခံမည့် ဖုန်းနံပါတ်">
-                <button onclick="submitWithdraw()" class="out-btn">ငွေထုတ်တောင်းဆိုမည်</button>
+        <div id="wallet" class="tab-panel">
+            <div class="wallet-card">
+                <h3>ငွေသွင်းရန် (Kpay: 09-XXXXXXX)</h3>
+                <input type="number" id="in-amt" placeholder="ပမာဏ">
+                <input type="text" id="in-id" placeholder="လုပ်ငန်းစဉ်နံပါတ်">
+                <button onclick="alert('တင်ပြပြီးပါပြီ')" style="background: green; color: white;">တင်ပြမည်</button>
             </div>
         </div>
     </div>
