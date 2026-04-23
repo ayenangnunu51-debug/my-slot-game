@@ -2,169 +2,126 @@ const SB_URL = "https://mgxhoraoablmrqvyjaiw.supabase.co";
 const SB_KEY = "sb_publishable_wIgcdXqvZTr9MJeV6vAEYw_bMSsvD3J";
 const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-let coins = 0;
-let username = localStorage.getItem('game_username') || null;
+let coins = 0, profileId = localStorage.getItem('game_user_id'), isLogin = false;
+let timeRemaining = 30, hasPlacedBet = false, currentGameState = "BETTING";
+
+const suits = ['♠', '♥', '♦', '♣'], values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+// --- Live Timer System ---
+function startLiveTimer() {
+    setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining <= 0) { timeRemaining = 30; resetTable(); }
+        updateTimerUI();
+        if (timeRemaining === 10) startDealingPhase();
+    }, 1000);
+}
+
+function updateTimerUI() {
+    const bar = document.getElementById('timer-bar'), num = document.getElementById('timer-num'), status = document.getElementById('status-text');
+    num.innerText = timeRemaining;
+    bar.style.width = (timeRemaining / 30) * 100 + "%";
+    if (timeRemaining > 10) {
+        status.innerText = "လောင်းကြေးတင်ရန် အချိန်ကျန်"; status.style.color = "#28a745";
+        document.getElementById('bet-btn').disabled = hasPlacedBet;
+        currentGameState = "BETTING";
+    } else {
+        status.innerText = "ဖဲဝေနေသည်..."; status.style.color = "#dc3545";
+        document.getElementById('bet-btn').disabled = true;
+        currentGameState = "DEALING";
+    }
+}
+
+// --- Card Logic ---
+function createCardUI(vIdx, sIdx) {
+    const s = suits[sIdx], v = values[vIdx];
+    return `<div class="card ${ (s === '♥' || s === '♦') ? 'red' : 'black' }">
+                <div class="t">${v}${s}</div><div class="m">${s}</div>
+            </div>`;
+}
+
+function placeLiveBet() {
+    const bet = parseInt(document.getElementById('bet-amount').value);
+    if (coins < bet) return alert("ငွေမလုံလောက်ပါ");
+    if (currentGameState !== "BETTING") return alert("နောက်တစ်ပွဲစောင့်ပါ");
+    coins -= bet; hasPlacedBet = true; updateUI();
+    document.getElementById('my-bet-status').innerText = bet + "K";
+    document.getElementById('bet-btn').disabled = true;
+}
+
+function startDealingPhase() {
+    document.getElementById('snd-card').play();
+    const slots = ['dealer-cards', 'p1-cards', 'me-cards', 'p2-cards', 'p3-cards', 'p4-cards'];
+    let scores = {};
+
+    slots.forEach((slot, index) => {
+        setTimeout(() => {
+            const v1 = Math.floor(Math.random()*13), s1 = Math.floor(Math.random()*4);
+            const v2 = Math.floor(Math.random()*13), s2 = Math.floor(Math.random()*4);
+            document.getElementById(slot).innerHTML = createCardUI(v1, s1) + createCardUI(v2, s2);
+            scores[slot] = ( (v1 >= 9 ? 0 : v1+1) + (v2 >= 9 ? 0 : v2+1) ) % 10;
+            if (index === slots.length - 1 && hasPlacedBet) checkResult(scores);
+        }, index * 200);
+    });
+}
+
+function checkResult(scores) {
+    const bet = parseInt(document.getElementById('bet-amount').value);
+    setTimeout(() => {
+        if (scores['me-cards'] > scores['dealer-cards']) {
+            let win = (scores['me-cards'] >= 8) ? bet * 3 : bet * 2;
+            coins += win; document.getElementById('snd-win').play();
+        } else if (scores['me-cards'] === scores['dealer-cards']) { coins += bet; }
+        syncDB();
+    }, 1500);
+}
+
+function resetTable() {
+    hasPlacedBet = false; document.getElementById('my-bet-status').innerText = "";
+    ['dealer-cards', 'p1-cards', 'me-cards', 'p2-cards', 'p3-cards', 'p4-cards'].forEach(s => document.getElementById(s).innerHTML = "");
+}
+
+// --- Other Games & System ---
+async function playSlot() {
+    const bet = parseInt(document.getElementById('bet-amount').value);
+    if(coins < bet) return alert("ငွေမလုံလောက်ပါ");
+    coins -= bet; updateUI();
+    let c = 0; const itv = setInterval(() => {
+        const icons = ['💎', '🍒', '🔔', '⭐'];
+        document.getElementById('r1').innerText = icons[Math.floor(Math.random()*4)];
+        document.getElementById('r2').innerText = icons[Math.floor(Math.random()*4)];
+        document.getElementById('r3').innerText = icons[Math.floor(Math.random()*4)];
+        if(++c > 10) { clearInterval(itv); syncDB(); }
+    }, 100);
+}
+
+async function handleAuth() {
+    const user = document.getElementById('username').value.trim(), pass = document.getElementById('password').value.trim();
+    if (!isLogin) {
+        const { data } = await supabaseClient.from('profiles').insert([{username: user, password: pass, coins: 5000}]).select().single();
+        if (data) { localStorage.setItem('game_user_id', data.id); location.reload(); }
+    } else {
+        const { data } = await supabaseClient.from('profiles').select('*').eq('username', user).eq('password', pass).maybeSingle();
+        if (data) { localStorage.setItem('game_user_id', data.id); location.reload(); }
+    }
+}
 
 async function init() {
-    if (username) {
-        await fetchUserData();
-    }
-    updateUI();
+    if (!profileId) return;
+    document.getElementById('auth-page').style.display = 'none';
+    document.getElementById('game-page').style.display = 'block';
+    const { data } = await supabaseClient.from('profiles').select('*').eq('id', profileId).maybeSingle();
+    if (data) { coins = data.coins; document.getElementById('display-user').innerText = data.username; updateUI(); startLiveTimer(); }
 }
 
-async function fetchUserData() {
-    try {
-        const { data, error } = await _supabase.from('profiles').select('coins').eq('username', username).single();
-        if (data) { 
-            coins = data.coins; 
-            updateUI(); 
-        }
-    } catch (e) { console.log(e); }
+function updateUI() { document.getElementById('balance').innerText = coins.toLocaleString(); }
+async function syncDB() { await supabaseClient.from('profiles').update({coins: coins}).eq('id', profileId); updateUI(); }
+function toggleAuth() { isLogin = !isLogin; document.getElementById('auth-title').innerText = isLogin ? "LOGIN" : "CREATE ACCOUNT"; }
+function switchGame(t) { 
+    ['shan', 'slot', 'dice'].forEach(g => document.getElementById(g+'-area').style.display = (g===t?'block':'none'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.id==='btn-'+t));
 }
-
-function updateUI() {
-    const authUI = document.getElementById('auth-ui');
-    if (!authUI) return;
-
-    if (username) {
-        authUI.innerHTML = `
-            <div style="text-align:right; color:gold; font-size: 14px;">
-                <b style="color:white;">${username}</b> <br> 
-                💰 ${coins.toLocaleString()} K 
-                <button onclick="logout()" style="background:red; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer; margin-top:5px; font-size:11px;">ထွက်မည်</button>
-            </div>
-        `;
-    } else {
-        authUI.innerHTML = `
-            <input type="text" id="login-user" placeholder="အမည်">
-            <input type="password" id="login-pass" placeholder="လျှို့ဝှက်နံပါတ်">
-            <button class="login-btn" onclick="login()">ဝင်မည်</button>
-            <div style="font-size: 10px; margin-top: 5px; cursor: pointer; color: gold; text-align: center;" onclick="showSignup()">အကောင့်မရှိသေးပါက ဖွင့်ရန်</div>
-        `;
-    }
-}
-
-function logout() {
-    if(confirm("အကောင့်မှ ထွက်မှာ သေချာပါသလား?")) {
-        localStorage.removeItem('game_username');
-        username = null;
-        coins = 0;
-        updateUI();
-    }
-}
-
-async function login() {
-    const u = document.getElementById('login-user').value.trim();
-    const p = document.getElementById('login-pass').value;
-    if(!u || !p) return alert("အချက်အလက် အကုန်ဖြည့်ပါ");
-
-    const { data, error } = await _supabase.from('profiles').select('*').eq('username', u).eq('password', p).maybeSingle();
-    
-    if (data) {
-        localStorage.setItem('game_username', u);
-        username = u; 
-        coins = data.coins; 
-        updateUI(); 
-        alert("ဝင်ရောက်ပြီးပါပြီ");
-    } else { 
-        alert("အမည် သို့မဟုတ် လျှို့ဝှက်နံပါတ် မှားနေပါသည်"); 
-    }
-}
-
-function showSignup() {
-    const panel = document.getElementById('wallet-panel');
-    const body = document.getElementById('wallet-body');
-    panel.style.display = 'flex';
-    body.innerHTML = `
-        <h3 style="color:gold;">အကောင့်သစ်ဖွင့်ရန်</h3>
-        <input type="text" id="reg-user" placeholder="အမည်သစ် (Username)">
-        <input type="password" id="reg-pass" placeholder="လျှို့ဝှက်နံပါတ် (အနည်းဆုံး ၆ လုံး)">
-        <button class="login-btn" style="margin-top:10px;" onclick="handleSignup()">အကောင့်ဖွင့်မည်</button>
-    `;
-}
-
-// အကောင့်သစ်ဖွင့်ခြင်း Logic (last_login column ပါ ထည့်သွင်းထားပါတယ်)
-async function handleSignup() {
-    const newUser = document.getElementById('reg-user').value.trim();
-    const newPass = document.getElementById('reg-pass').value;
-
-    if (!newUser || newPass.length < 6) {
-        return alert("အမည်ထည့်ပါ သို့မဟုတ် Password အနည်းဆုံး ၆ လုံး ရှိရပါမည်။");
-    }
-
-    try {
-        const { data: existingUser } = await _supabase
-            .from('profiles')
-            .select('username')
-            .eq('username', newUser);
-
-        if (existingUser && existingUser.length > 0) {
-            return alert("ဒီအမည်က ရှိပြီးသားဖြစ်နေလို့ တခြားအမည်တစ်ခု သုံးပေးပါ။");
-        }
-
-        const { error: insertError } = await _supabase
-            .from('profiles')
-            .insert([{ 
-                username: newUser, 
-                password: newPass, 
-                coins: 5000,
-                last_login: new Date().toISOString() // Table အသစ်အတွက် အချိန်ထည့်ခြင်း
-            }]);
-
-        if (insertError) {
-            throw insertError;
-        }
-
-        alert("အကောင့်ဖွင့်ခြင်း အောင်မြင်ပါသည်။");
-        localStorage.setItem('game_username', newUser);
-        username = newUser;
-        coins = 5000;
-        closeWallet();
-        updateUI();
-
-    } catch (err) {
-        console.error("Signup error:", err);
-        alert("အမှားတစ်ခုရှိနေပါသည်- " + err.message);
-    }
-}
-
-function showWallet(type) {
-    if (!username) return alert("အရင်ဆုံး အကောင့်ဝင်ပါ");
-    const panel = document.getElementById('wallet-panel');
-    const body = document.getElementById('wallet-body');
-    panel.style.display = 'flex';
-    if (type === 'deposit') {
-        body.innerHTML = `<h3 style="color:gold;">ငွေသွင်းရန်</h3><p>Kpay/Wave: 09-XXXXXXXX</p><input type="number" id="amt" placeholder="ပမာဏ"><button class="login-btn" onclick="handleWallet('in')">တင်ပြမည်</button>`;
-    } else {
-        body.innerHTML = `<h3 style="color:gold;">ငွေထုတ်ရန်</h3><p>လက်ကျန်: ${coins} K</p><input type="number" id="amt" placeholder="ပမာဏ"><button class="login-btn" onclick="handleWallet('out')">ထုတ်မည်</button>`;
-    }
-}
-
-async function handleWallet(action) {
-    const amt = parseInt(document.getElementById('amt').value);
-    if (!amt || amt <= 0) return alert("ပမာဏမှန်ကန်စွာဖြည့်ပါ");
-    if (action === 'out' && amt > coins) return alert("လက်ကျန်ငွေမလုံလောက်ပါ");
-    
-    let newBalance = (action === 'in') ? coins + amt : coins - amt;
-    const { error } = await _supabase.from('profiles').update({ coins: newBalance }).eq('username', username);
-    if (!error) { 
-        coins = newBalance; 
-        updateUI(); 
-        closeWallet(); 
-        alert("အောင်မြင်ပါသည်"); 
-    }
-}
-
-function closeWallet() { document.getElementById('wallet-panel').style.display = 'none'; }
-
-async function spinSlot() {
-    if (!username) return alert("အရင်ဆုံး အကောင့်ဝင်ပါ");
-    if (coins < 100) return alert("ငွေမလုံလောက်ပါ");
-    
-    coins -= 100; 
-    updateUI();
-    const { error } = await _supabase.from('profiles').update({ coins: coins }).eq('username', username);
-    if(!error) { alert("စလော့လှည့်နေပါသည်..."); }
-}
-
+function handleLogout() { localStorage.clear(); location.reload(); }
+function openWallet() { document.getElementById('wallet-modal').style.display='flex'; }
+function closeWallet() { document.getElementById('wallet-modal').style.display='none'; }
 init();
