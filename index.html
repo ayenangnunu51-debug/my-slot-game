@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Casino - Nang Nu Edition</title>
+    <title>Golden Casino - Nang Nu Live Edition</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -15,7 +15,7 @@
             <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="Password">
             <button onclick="handleAuth()" id="auth-btn" class="gold-btn">အကောင့်ဖွင့်မည်</button>
-            <p onclick="toggleAuth()" id="auth-toggle">အကောင့်ရှိပြီးသားလား? <span>ဝင်ရန်</span></p>
+            <p onclick="toggleAuth()" id="auth-toggle">အကောင့်ရှိပြီးသားလား? <span>Login ဝင်ပါ</span></p>
         </div>
     </div>
 
@@ -29,7 +29,7 @@
         </div>
 
         <div class="nav-bar">
-            <button onclick="switchGame('shan')" id="btn-shan" class="nav-item active">ရှမ်းကိုးမီး</button>
+            <button onclick="switchGame('shan')" id="btn-shan" class="nav-item active">Live ရှမ်းကိုးမီး</button>
             <button onclick="switchGame('slot')" id="btn-slot" class="nav-item">SLOT</button>
             <button onclick="switchGame('dice')" id="btn-dice" class="nav-item">DICE</button>
         </div>
@@ -44,20 +44,30 @@
         </div>
 
         <div id="shan-area" class="game-panel">
+            <div class="timer-section">
+                <div id="status-text">စောင့်ဆိုင်းနေပါ...</div>
+                <div class="progress-container"><div id="timer-bar"></div></div>
+                <div id="timer-num">30</div>
+            </div>
+
             <div class="shan-table">
                 <div class="dealer-box">
                     <p>ဒိုင် (Dealer)</p>
                     <div id="dealer-cards" class="card-row"></div>
                 </div>
                 <div class="players-grid">
-                    <div class="p-slot" id="p1"><div class="card-row" id="p1-cards"></div><p>Player 1</p></div>
-                    <div class="p-slot highlight" id="me"><div class="card-row" id="me-cards"></div><p>သင် (You)</p></div>
-                    <div class="p-slot" id="p2"><div class="card-row" id="p2-cards"></div><p>Player 2</p></div>
-                    <div class="p-slot" id="p3"><div class="card-row" id="p3-cards"></div><p>Player 3</p></div>
-                    <div class="p-slot" id="p4"><div class="card-row" id="p4-cards"></div><p>Player 4</p></div>
+                    <div class="p-slot" id="p1"><div class="card-row" id="p1-cards"></div><p>P-1</p></div>
+                    <div class="p-slot highlight" id="me">
+                        <div class="card-row" id="me-cards"></div>
+                        <p>You</p>
+                        <div id="my-bet-status" style="color: gold; font-size: 10px;"></div>
+                    </div>
+                    <div class="p-slot" id="p2"><div class="card-row" id="p2-cards"></div><p>P-2</p></div>
+                    <div class="p-slot" id="p3"><div class="card-row" id="p3-cards"></div><p>P-3</p></div>
+                    <div class="p-slot" id="p4"><div class="card-row" id="p4-cards"></div><p>P-4</p></div>
                 </div>
             </div>
-            <button onclick="playShanMulti()" id="shan-btn" class="action-btn">ဖဲဝေမည်</button>
+            <button onclick="placeLiveBet()" id="bet-btn" class="action-btn gold-btn">လောင်းမည် (BET)</button>
         </div>
 
         <div id="slot-area" class="game-panel" style="display:none;">
@@ -67,32 +77,27 @@
 
         <div id="dice-area" class="game-panel" style="display:none;">
             <div id="dice-view">🎲</div>
-            <div class="dice-btns">
-                <button onclick="playDice('high')" class="dice-btn high">အကြီး</button>
-                <button onclick="playDice('low')" class="dice-btn low">အသေး</button>
-            </div>
+            <button onclick="playDice('high')" class="dice-btn high">အကြီး</button>
+            <button onclick="playDice('low')" class="dice-btn low">အသေး</button>
         </div>
 
         <div class="footer-wallet">
-            <button onclick="openWallet('deposit')" class="w-btn in">ငွေသွင်း</button>
-            <button onclick="openWallet('withdraw')" class="w-btn out">ငွေထုတ်</button>
+            <button onclick="openWallet()" class="w-btn in">ငွေသွင်း/ထုတ်</button>
         </div>
     </div>
 
     <div id="wallet-modal" class="modal">
         <div class="modal-box">
-            <h3 id="w-title">Transaction</h3>
-            <div class="bank-info">Kpay/Wave: 09680575421 <br> Name: Thant Naing Aye</div>
-            <input type="number" id="w-amount" placeholder="ပမာဏ">
-            <input type="text" id="w-phone" placeholder="ဖုန်းနံပါတ်">
-            <button onclick="submitWallet()" class="gold-btn">Confirm</button>
+            <h3>Bank Transfer</h3>
+            <p>Kpay/Wave: 09680575421</p>
+            <input type="number" id="w-amount" placeholder="Amount">
+            <button onclick="alert('တင်ပြပြီးပါပြီ')" class="gold-btn">Confirm</button>
             <button onclick="closeWallet()" class="grey-btn">Close</button>
         </div>
     </div>
 
     <audio id="snd-card" src="https://actions.google.com/sounds/v1/foley/card_shuffle.ogg"></audio>
     <audio id="snd-win" src="https://actions.google.com/sounds/v1/cartoon/clinker_win.ogg"></audio>
-    <audio id="snd-spin" src="https://actions.google.com/sounds/v1/foley/beaming_side_to_side.ogg"></audio>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
