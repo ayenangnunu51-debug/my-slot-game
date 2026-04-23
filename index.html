@@ -3,53 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nang Nu Professional Casino</title>
+    <title>Nang Nu Pro Casino</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --gold: #ffd700; --bg: #0a0a0a; --green: #1a4a2e; }
         body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; text-align: center; }
         .app { max-width: 500px; margin: auto; padding: 10px; }
         
-        /* Navigation & Header */
+        /* Header & Nav */
         .header { display: flex; justify-content: space-between; padding: 10px; background: #16162d; border-radius: 10px; }
         .nav { display: flex; gap: 5px; overflow-x: auto; padding: 10px 0; }
         .nav button { flex: 1; padding: 10px; border: none; border-radius: 5px; background: #222; color: white; cursor: pointer; white-space: nowrap; }
         .nav button.active { background: var(--gold); color: black; font-weight: bold; }
 
-        /* Shan Koe Mee Table with Avatars */
+        /* Shan Table Layout */
         .table-area { background: radial-gradient(circle, var(--green) 0%, #0d2b1a 100%); border: 8px solid #4e342e; border-radius: 150px; height: 380px; position: relative; margin: 20px auto; box-shadow: inset 0 0 50px #000; }
         .seat { position: absolute; font-size: 11px; text-align: center; }
-        .avatar { font-size: 24px; display: block; margin-bottom: 2px; }
-        
-        /* Positions */
+        .avatar { font-size: 22px; display: block; }
         .dealer { top: 5%; left: 50%; transform: translateX(-50%); }
-        .p1 { top: 30%; left: 5%; } .p2 { top: 30%; right: 5%; }
-        .p3 { bottom: 30%; left: 5%; } .p4 { bottom: 30%; right: 5%; }
+        .p1 { top: 30%; left: 8%; } .p2 { top: 30%; right: 8%; }
+        .p3 { bottom: 30%; left: 8%; } .p4 { bottom: 30%; right: 8%; }
         .me { bottom: 5%; left: 50%; transform: translateX(-50%); }
-
-        .card-box { display: flex; justify-content: center; height: 45px; }
-        .card { width: 30px; height: 45px; background: white; color: black; border-radius: 4px; margin-left: -10px; font-size: 10px; font-weight: bold; border: 1px solid #999; display: flex; align-items: center; justify-content: center; }
+        .card-box { display: flex; justify-content: center; height: 45px; margin-top: 2px; }
+        .card { width: 30px; height: 45px; background: white; color: black; border-radius: 4px; margin-left: -10px; font-size: 10px; font-weight: bold; border: 1px solid #999; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 5px #000; }
         .red { color: #d00; }
 
-        /* Game Panels */
+        /* Animation Games (Slot, Wheel) */
         .panel { display: none; background: #16162d; padding: 20px; border-radius: 15px; margin-top: 10px; min-height: 450px; }
         .panel.active { display: block; }
-        .timer-bar { width: 100%; height: 6px; background: #222; margin: 10px 0; border-radius: 3px; overflow: hidden; }
-        #bar-fill { width: 100%; height: 100%; background: var(--gold); transition: width 1s linear; }
+        .wheel-container { width: 180px; height: 180px; border: 8px solid var(--gold); border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 40px; transition: transform 3s cubic-bezier(0.1, 0, 0.1, 1); }
+        .slot-box { font-size: 50px; margin: 30px 0; background: #222; padding: 20px; border-radius: 10px; letter-spacing: 10px; }
 
         /* Wallet System */
-        .wallet-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 5px; border: none; box-sizing: border-box; }
+        .w-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 5px; border: none; box-sizing: border-box; background: #222; color: white; }
         .btn-in { background: #28a745; width: 100%; padding: 12px; color: white; border: none; border-radius: 5px; font-weight: bold; }
         .btn-out { background: #dc3545; width: 100%; padding: 12px; color: white; border: none; border-radius: 5px; font-weight: bold; }
-        .info-box { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 5px; border-left: 4px solid var(--gold); margin-bottom: 15px; text-align: left; font-size: 13px; }
+        .main-btn { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="app">
     <div class="header">
-        <div>👤 <span id="user-display">Guest</span></div>
-        <div style="color: var(--gold);">💰 <span id="coin-display">0</span> K</div>
+        <div>👤 <span id="u-name">...</span></div>
+        <div style="color: var(--gold);">💰 <span id="u-coins">0</span> K</div>
     </div>
 
     <div class="nav">
@@ -62,62 +59,75 @@
 
     <div id="shan" class="panel active">
         <div id="status">လောင်းကြေးတင်နိုင်သည်</div>
-        <div class="timer-bar"><div id="bar-fill"></div></div>
-        <div id="timer-txt">30</div>
+        <div id="timer-txt" style="font-weight:bold; color:var(--gold);">30</div>
         <div class="table-area">
-            <div class="seat dealer"><span class="avatar">👩‍💼</span><div id="d-cards" class="card-box"></div>ဒိုင်</div>
+            <div class="seat dealer"><span class="avatar">👩‍💼</span><div id="d-cards" class="card-box"></div>Dealer</div>
             <div class="seat p1"><span class="avatar">👨‍🦰</span><div id="p1-cards" class="card-box"></div>P1</div>
             <div class="seat p2"><span class="avatar">👱‍♀️</span><div id="p2-cards" class="card-box"></div>P2</div>
             <div class="seat p3"><span class="avatar">👨‍🦳</span><div id="p3-cards" class="card-box"></div>P3</div>
             <div class="seat p4"><span class="avatar">🧔</span><div id="p4-cards" class="card-box"></div>P4</div>
-            <div class="seat me"><span class="avatar">😎</span><div id="my-cards" class="card-box"></div>YOU <span id="my-bet"></span></div>
+            <div class="seat me"><span class="avatar">😎</span><div id="my-cards" class="card-box"></div>YOU <span id="bet-label"></span></div>
         </div>
-        <select id="bet-amt" class="wallet-input"><option value="500">500 K</option><option value="1000">1000 K</option></select>
-        <button onclick="betShan()" id="btn-bet" style="width:100%; padding:15px; background:var(--gold); border:none; border-radius:30px; font-weight:bold;">လောင်းမည် (BET)</button>
+        <select id="bet-select" class="w-input"><option value="500">500 K</option><option value="1000">1000 K</option></select>
+        <button onclick="betShan()" id="btn-bet" class="main-btn">လောင်းမည်</button>
     </div>
 
-    <div id="wallet" class="panel">
-        <div class="info-box">
-            <b>ငွေသွင်းရန် အက်မင်ဖုန်း:</b> 09-XXXXXXXXX (Kpay)<br>
-            <i>*ငွေသွင်းပြီးပါက လုပ်ငန်းစဉ်နံပါတ် နောက်ဆုံး ၆ လုံး တင်ပြပေးပါ။</i>
-        </div>
-        
-        <input type="number" id="in-amt" class="wallet-input" placeholder="သွင်းမည့် ပမာဏ">
-        <input type="text" id="in-id" class="wallet-input" placeholder="လုပ်ငန်းစဉ်နံပါတ် (နောက်ဆုံး ၆ လုံး)">
-        <button class="btn-in" onclick="submitIn()">ငွေသွင်းမှုကို အကြောင်းကြားမည်</button>
-
-        <hr style="margin: 20px 0; opacity: 0.1;">
-
-        <input type="number" id="out-amt" class="wallet-input" placeholder="ထုတ်မည့် ပမာဏ">
-        <input type="text" id="out-phone" class="wallet-input" placeholder="ငွေလက်ခံမည့် ဖုန်းနံပါတ်">
-        <button class="btn-out" onclick="submitOut()">ငွေထုတ်ယူရန် တောင်းဆိုမည်</button>
+    <div id="slot" class="panel">
+        <div class="slot-box" id="slot-res">🎰🎰🎰</div>
+        <button onclick="spinSlot()" class="main-btn">SPIN</button>
     </div>
 
-    <div id="slot" class="panel"><h2>🎰 SLOT MACHINE</h2><button onclick="alert('Spinning...')" class="btn-in">SPIN</button></div>
-    <div id="dice" class="panel"><h2>🎲 DICE GAME</h2><button onclick="alert('Rolling...')" class="btn-in">ROLL</button></div>
-    <div id="wheel" class="panel"><h2>🎡 WHEEL SPIN</h2><button onclick="alert('Spinnng...')" class="btn-in">SPIN</button></div>
+    <div id="wheel" class="panel">
+        <div class="wheel-container" id="wheel-obj">🎡</div>
+        <button onclick="spinWheel()" class="main-btn">WHEEL SPIN</button>
+    </div>
+
+    <div id="wallet" class="panel" style="text-align:left;">
+        <div style="background:rgba(255,215,0,0.1); padding:10px; border-radius:5px; margin-bottom:10px;">
+            <b>အက်မင် Kpay:</b> 09-XXXXXXXXX
+        </div>
+        <input type="number" id="in-amt" class="w-input" placeholder="သွင်းမည့် ပမာဏ">
+        <input type="text" id="in-tx" class="w-input" placeholder="လုပ်ငန်းစဉ်နံပါတ် (နောက်ဆုံး ၆ လုံး)">
+        <button class="btn-in" onclick="alert('တင်ပြပြီးပါပြီ')">ငွေသွင်းမည်</button>
+        <hr style="opacity:0.1; margin:15px 0;">
+        <input type="number" id="out-amt" class="w-input" placeholder="ထုတ်မည့် ပမာဏ">
+        <input type="text" id="out-ph" class="w-input" placeholder="ငွေလက်ခံမည့် ဖုန်းနံပါတ်">
+        <button class="btn-out" onclick="alert('တင်ပြပြီးပါပြီ')">ငွေထုတ်မည်</button>
+    </div>
 </div>
 
 <script>
     const SB_URL = "https://mgxhoraoablmrqvyjaiw.supabase.co";
     const SB_KEY = "sb_publishable_wIgcdXqvZTr9MJeV6vAEYw_bMSsvD3J";
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-    
-    let coins = 0, pId = localStorage.getItem('game_user_id'), time = 30, betted = false;
+    let coins = 0, pId = localStorage.getItem('game_user_id'), time = 30;
 
-    function startLoop() {
+    // Game Functions
+    async function spinSlot() {
+        const icons = ['💎','🍒','🔔','⭐','🍎'];
+        let res = "";
+        for(let i=0; i<3; i++) res += icons[Math.floor(Math.random()*5)];
+        document.getElementById('slot-res').innerText = res;
+    }
+
+    function spinWheel() {
+        const wheel = document.getElementById('wheel-obj');
+        const rand = Math.floor(Math.random() * 3600) + 360;
+        wheel.style.transform = `rotate(${rand}deg)`;
+    }
+
+    function startTimer() {
         setInterval(() => {
             time--;
-            if (time <= 0) { time = 30; reset(); }
+            if (time <= 0) { time = 30; resetShan(); }
             document.getElementById('timer-txt').innerText = time;
-            document.getElementById('bar-fill').style.width = (time/30)*100 + "%";
-            if (time === 10) { deal(); }
-            document.getElementById('btn-bet').disabled = (time <= 10 || betted);
+            if (time === 10) dealCards();
         }, 1000);
     }
 
-    function deal() {
-        ['d-cards', 'p1-cards', 'p2-cards', 'p3-cards', 'p4-cards', 'my-cards'].forEach((id, i) => {
+    function dealCards() {
+        const ids = ['d-cards','p1-cards','p2-cards','p3-cards','p4-cards','my-cards'];
+        ids.forEach((id, i) => {
             setTimeout(() => { document.getElementById(id).innerHTML = draw()+draw(); }, i * 300);
         });
     }
@@ -135,34 +145,20 @@
         document.getElementById('t-'+name).classList.add('active');
     }
 
-    async function submitIn() {
-        const amt = document.getElementById('in-amt').value;
-        const txId = document.getElementById('in-id').value;
-        if(!amt || !txId) return alert("အချက်အလက်အပြည့်အစုံဖြည့်ပါ");
-        alert(`${amt} K သွင်းရန် တောင်းဆိုမှု (ID: ${txId}) ကို အက်မင်ထံ ပို့လိုက်ပါပြီ`);
-    }
-
-    async function submitOut() {
-        const amt = document.getElementById('out-amt').value;
-        const phone = document.getElementById('out-phone').value;
-        if(!amt || !phone) return alert("အချက်အလက်အပြည့်အစုံဖြည့်ပါ");
-        alert(`${amt} K ကို ${phone} သို့ ထုတ်ယူရန် တောင်းဆိုမှု ပို့လိုက်ပါပြီ`);
-    }
-
     async function init() {
         if (!pId) return;
         const { data } = await supabaseClient.from('profiles').select('*').eq('id', pId).maybeSingle();
         if (data) {
             coins = data.coins;
-            document.getElementById('user-display').innerText = data.username;
-            document.getElementById('coin-display').innerText = coins.toLocaleString();
-            startLoop();
+            document.getElementById('u-name').innerText = data.username;
+            document.getElementById('u-coins').innerText = coins.toLocaleString();
+            startTimer();
         }
     }
 
-    function reset() { 
-        betted = false; document.getElementById('my-bet').innerText = "";
-        ['d-cards', 'p1-cards', 'p2-cards', 'p3-cards', 'p4-cards', 'my-cards'].forEach(id => document.getElementById(id).innerHTML = "");
+    function resetShan() {
+        document.getElementById('bet-label').innerText = "";
+        ['d-cards','p1-cards','p2-cards','p3-cards','p4-cards','my-cards'].forEach(id => document.getElementById(id).innerHTML = "");
     }
 
     init();
