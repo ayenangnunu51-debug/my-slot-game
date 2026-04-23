@@ -33,13 +33,16 @@
     </div>
 
     <div class="bottom-menu">
-        <div class="menu-item">🎁<br>ပရိုမိုးရှင်း</div>
-        <div class="menu-item">💬<br>တိုက်ရိုက်စကားပြော</div>
-        <div class="menu-item main-btn">🏠<br>ပင်မ</div>
-        <div class="menu-item">💰<br>ငွေသွင်း</div>
-        <div class="menu-item">💵<br>ငွေထုတ်</div>
-    </div>
+    <div class="menu-item" onclick="showWallet('promo')">🎁<br>ပရိုမိုးရှင်း</div>
+    <div class="menu-item" onclick="showWallet('chat')">💬<br>တိုက်ရိုက်စကားပြော</div>
+    <div class="menu-item main-btn" onclick="showPage('home')">🏠<br>ပင်မ</div>
+    <div class="menu-item" onclick="showWallet('deposit')">💰<br>ငွေသွင်း</div>
+    <div class="menu-item" onclick="showWallet('withdraw')">💵<br>ငွေထုတ်</div>
+</div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+<div id="wallet-panel" class="wallet-overlay" style="display:none;">
+    <div class="wallet-content">
+        <span class="close" onclick="closeWallet()">&times;</span>
+        <div id="wallet-body"></div>
+    </div>
+</div>
