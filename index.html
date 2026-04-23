@@ -14,19 +14,16 @@
                 <span style="color: gold;"><i class="fas fa-user-circle"></i> <span id="user-name">...</span></span>
                 <button onclick="handleLogout()" class="logout-link">Logout</button>
             </div>
-            <div class="balance-display">
-                💰 <span id="balance">0</span> K
-            </div>
+            <div class="balance-display">💰 <span id="balance">0</span> K</div>
         </div>
 
         <div class="bet-selection">
-            <span>BET:</span>
+            <span>BET AMOUNT:</span>
             <select id="bet-amount" class="bet-input">
                 <option value="100">100 K</option>
                 <option value="500">500 K</option>
                 <option value="1000">1,000 K</option>
                 <option value="5000">5,000 K</option>
-                <option value="10000">10,000 K</option>
             </select>
         </div>
 
@@ -42,11 +39,11 @@
                 <div id="r2" class="reel">🎰</div>
                 <div id="r3" class="reel">🎰</div>
             </div>
-            <button onclick="playSlot()" class="action-btn spin-btn">SPIN</button>
+            <button onclick="playSlot()" class="action-btn spin-btn">SPIN NOW</button>
         </div>
 
         <div id="dice-area" class="game-panel" style="display: none;">
-            <div id="dice-box" class="dice-view">⚀</div>
+            <div id="dice-box" class="dice-view">🎲</div>
             <div class="dice-btns">
                 <button onclick="playDice('high')" class="action-btn btn-high">အကြီး (၄,၅,၆)</button>
                 <button onclick="playDice('low')" class="action-btn btn-low">အသေး (၁,၂,၃)</button>
@@ -68,20 +65,17 @@
 
         <div id="wallet-modal" class="modal-overlay">
             <div class="modal-card">
-                <h3 id="wallet-title" style="color: gold;">Transaction</h3>
+                <h3 id="wallet-title" style="color: gold;">TRANSACTION</h3>
                 <div class="bank-info">
-                    <p>KBZ Pay / Wave Pay: 09680575421</p>
+                    <p>KBZ Pay / Wave: 09680575421</p>
                     <p>Name: Thant Naing Aye</p>
                 </div>
-                <div class="input-group">
-                    <label>လက်ရှိပမာဏ: <span id="modal-cur-bal">0</span> K</label>
-                    <input type="number" id="wallet-amount" oninput="updateRemCalc()" placeholder="ပမာဏထည့်ပါ">
-                    <input type="text" id="wallet-phone" placeholder="ငွေလက်ခံမည့် ဖုန်းနံပါတ်/ID">
-                    <label style="color: #00ff00;">ကျန်ရှိမည့်ပမာဏ: <span id="modal-rem-bal">0</span> K</label>
-                </div>
+                <input type="number" id="wallet-amount" oninput="updateRemCalc()" placeholder="ပမာဏထည့်ပါ">
+                <input type="text" id="wallet-phone" placeholder="ဖုန်းနံပါတ်/ID ထည့်ပါ">
+                <div style="margin: 10px 0; font-size: 0.8rem;">ကျန်မည့်ငွေ: <span id="modal-rem-bal">0</span> K</div>
                 <div class="modal-actions">
-                    <button onclick="submitWallet()" class="action-btn">အတည်ပြုမည်</button>
-                    <button onclick="closeWallet()" class="action-btn cancel-btn">ပိတ်မည်</button>
+                    <button onclick="submitWallet()" class="action-btn">CONFIRM</button>
+                    <button onclick="closeWallet()" class="action-btn cancel-btn">CLOSE</button>
                 </div>
             </div>
         </div>
