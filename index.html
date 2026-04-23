@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nang Nu Online Casino</title>
+    <title>Nang Nu Casino</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -12,14 +12,13 @@
         <div class="top-bar">
             <div>👤 <span id="user-display">...</span></div>
             <div class="coins">💰 <span id="coin-display">0</span> K</div>
-            <button onclick="logout()">ထွက်ရန်</button>
+            <button onclick="logout()" class="logout-btn">ထွက်ရန် (Logout)</button>
         </div>
 
         <div class="nav-tabs">
             <button onclick="switchTab('shan')" id="tab-shan" class="active">ရှမ်းကိုးမီး</button>
             <button onclick="switchTab('slot')">SLOT</button>
             <button onclick="switchTab('dice')">DICE</button>
-            <button onclick="switchTab('wheel')">WHEEL</button>
             <button onclick="switchTab('wallet')">WALLET</button>
         </div>
 
@@ -43,32 +42,24 @@
                 <select id="bet-amount">
                     <option value="500">500 K</option>
                     <option value="1000">1000 K</option>
-                    <option value="5000">5000 K</option>
                 </select>
-                <button onclick="placeBet()" id="bet-btn" class="main-btn">လောင်းမည်</button>
+                <button onclick="placeBet()" id="bet-btn" class="main-btn">BET (လောင်းမည်)</button>
             </div>
         </div>
 
         <div id="wallet-panel" class="tab-content">
             <div class="wallet-card">
                 <h3>ငွေသွင်းရန် (Kpay: 09-XXXXXXXXX)</h3>
-                <p>ငွေသွင်းပြီးပါက လုပ်ငန်းစဉ်နံပါတ် နောက်ဆုံး ၆ လုံးကို တင်ပြပါ</p>
                 <input type="number" id="deposit-amt" placeholder="သွင်းမည့် ပမာဏ">
                 <input type="text" id="deposit-id" placeholder="လုပ်ငန်းစဉ်နံပါတ် (နောက်ဆုံး ၆ လုံး)">
-                <button onclick="submitDeposit()" class="deposit-btn">ငွေသွင်းမည်</button>
-                
+                <button onclick="submitDeposit()" class="deposit-btn">ငွေသွင်းမှုကို တင်ပြမည်</button>
                 <hr>
-                
                 <h3>ငွေထုတ်ရန်</h3>
                 <input type="number" id="withdraw-amt" placeholder="ထုတ်မည့် ပမာဏ">
                 <input type="text" id="withdraw-phone" placeholder="လက်ခံမည့် ဖုန်းနံပါတ်">
-                <button onclick="submitWithdraw()" class="withdraw-btn">ငွေထုတ်မည်</button>
+                <button onclick="submitWithdraw()" class="withdraw-btn">ငွေထုတ်ယူမည်</button>
             </div>
         </div>
-
-        <div id="slot-panel" class="tab-content"><h2>🎰 Slot Machine Coming Soon</h2></div>
-        <div id="dice-panel" class="tab-content"><h2>🎲 Dice Game Coming Soon</h2></div>
-        <div id="wheel-panel" class="tab-content"><h2>🎡 Wheel Spin Coming Soon</h2></div>
     </div>
     <script src="script.js"></script>
 </body>
