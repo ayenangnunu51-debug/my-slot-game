@@ -1,61 +1,103 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lion Burma Clone</title>
+    <title>Golden Casino - Nang Nu Live Edition</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="top-header">
-        <div class="logo">LION BURMA</div>
-        <div class="auth-box" id="auth-ui">
-            <input type="text" id="login-user" placeholder="အမည်">
-            <input type="password" id="login-pass" placeholder="လျှို့ဝှက်နံပါတ်">
-            <button class="login-btn" onclick="login()">ဝင်မည်</button>
-            <div style="font-size: 10px; margin-top: 5px; cursor: pointer; color: gold; text-align: center;" onclick="showSignup()">အကောင့်မရှိသေးပါက ဖွင့်ရန်</div>
+    <div id="auth-page" class="app-container">
+        <h1 class="main-logo">GOLDEN CASINO</h1>
+        <div class="glass-box">
+            <h2 id="auth-title">CREATE ACCOUNT</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="handleAuth()" id="auth-btn" class="gold-btn">အကောင့်ဖွင့်မည်</button>
+            <p onclick="toggleAuth()" id="auth-toggle">အကောင့်ရှိပြီးသားလား? <span>Login ဝင်ပါ</span></p>
         </div>
     </div>
 
-    <div class="main-banner">
-        <div class="promo-text">
-            <h2>မန်ဘာသစ် 50%</h2>
-            <p>နေ့စဉ်ဘောနပ် 20%</p>
-            <button class="cashback" style="background:red; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; cursor:pointer;" onclick="spinSlot()">
-                စလော့လှည့်မည် (100 K)
-            </button>
+    <div id="game-page" class="app-container" style="display: none;">
+        <div class="header">
+            <div class="user-meta">
+                <i class="fas fa-user-circle"></i> <span id="display-user">...</span>
+                <button onclick="handleLogout()" class="logout-btn">ထွက်ရန်</button>
+            </div>
+            <div class="coin-display">💰 <span id="balance">0</span> K</div>
+        </div>
+
+        <div class="nav-bar">
+            <button onclick="switchGame('shan')" id="btn-shan" class="nav-item active">Live ရှမ်းကိုးမီး</button>
+            <button onclick="switchGame('slot')" id="btn-slot" class="nav-item">SLOT</button>
+            <button onclick="switchGame('dice')" id="btn-dice" class="nav-item">DICE</button>
+        </div>
+
+        <div class="bet-selector">
+            လောင်းကြေး: 
+            <select id="bet-amount">
+                <option value="500">500 K</option>
+                <option value="1000">1,000 K</option>
+                <option value="5000">5,000 K</option>
+            </select>
+        </div>
+
+        <div id="shan-area" class="game-panel">
+            <div class="timer-section">
+                <div id="status-text">စောင့်ဆိုင်းနေပါ...</div>
+                <div class="progress-container"><div id="timer-bar"></div></div>
+                <div id="timer-num">30</div>
+            </div>
+
+            <div class="shan-table">
+                <div class="dealer-box">
+                    <p>ဒိုင် (Dealer)</p>
+                    <div id="dealer-cards" class="card-row"></div>
+                </div>
+                <div class="players-grid">
+                    <div class="p-slot" id="p1"><div class="card-row" id="p1-cards"></div><p>P-1</p></div>
+                    <div class="p-slot highlight" id="me">
+                        <div class="card-row" id="me-cards"></div>
+                        <p>You</p>
+                        <div id="my-bet-status" style="color: gold; font-size: 10px;"></div>
+                    </div>
+                    <div class="p-slot" id="p2"><div class="card-row" id="p2-cards"></div><p>P-2</p></div>
+                    <div class="p-slot" id="p3"><div class="card-row" id="p3-cards"></div><p>P-3</p></div>
+                    <div class="p-slot" id="p4"><div class="card-row" id="p4-cards"></div><p>P-4</p></div>
+                </div>
+            </div>
+            <button onclick="placeLiveBet()" id="bet-btn" class="action-btn gold-btn">လောင်းမည် (BET)</button>
+        </div>
+
+        <div id="slot-area" class="game-panel" style="display:none;">
+            <div class="slots"><span id="r1">🎰</span><span id="r2">🎰</span><span id="r3">🎰</span></div>
+            <button onclick="playSlot()" class="action-btn">SPIN</button>
+        </div>
+
+        <div id="dice-area" class="game-panel" style="display:none;">
+            <div id="dice-view">🎲</div>
+            <button onclick="playDice('high')" class="dice-btn high">အကြီး</button>
+            <button onclick="playDice('low')" class="dice-btn low">အသေး</button>
+        </div>
+
+        <div class="footer-wallet">
+            <button onclick="openWallet()" class="w-btn in">ငွေသွင်း/ထုတ်</button>
         </div>
     </div>
 
-    <div class="game-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px;">
-        <div class="game-card" onclick="spinSlot()" style="background:#161d2b; border:1px solid gold; border-radius:10px; text-align:center; padding:15px; cursor:pointer;">
-            <span style="font-size: 24px;">🎰</span><br>
-            <span style="font-size:12px; color: gold;">Slot 777</span>
-        </div>
-        <div class="game-card" onclick="alert('မကြာမီလာမည်')" style="background:#161d2b; border:1px solid gold; border-radius:10px; text-align:center; padding:15px; cursor:pointer;">
-            <span style="font-size: 24px;">🃏</span><br>
-            <span style="font-size:12px; color: #ccc;">Casino</span>
-        </div>
-        <div class="game-card" onclick="alert('မကြာမီလာမည်')" style="background:#161d2b; border:1px solid gold; border-radius:10px; text-align:center; padding:15px; cursor:pointer;">
-            <span style="font-size: 24px;">⚽</span><br>
-            <span style="font-size:12px; color: #ccc;">Sports</span>
+    <div id="wallet-modal" class="modal">
+        <div class="modal-box">
+            <h3>Bank Transfer</h3>
+            <p>Kpay/Wave: 09680575421</p>
+            <input type="number" id="w-amount" placeholder="Amount">
+            <button onclick="alert('တင်ပြပြီးပါပြီ')" class="gold-btn">Confirm</button>
+            <button onclick="closeWallet()" class="grey-btn">Close</button>
         </div>
     </div>
 
-    <div class="bottom-menu">
-        <div class="menu-item">🎁<br>ပရိုမိုးရှင်း</div>
-        <div class="menu-item" onclick="alert('Live Chat ကို ဆက်သွယ်နေပါသည်...')">💬<br>တိုက်ရိုက်စကားပြော</div>
-        <div class="menu-item main-btn" onclick="location.reload()">🏠<br>ပင်မ</div>
-        <div class="menu-item" onclick="showWallet('deposit')">💰<br>ငွေသွင်း</div>
-        <div class="menu-item" onclick="showWallet('withdraw')">💵<br>ငွေထုတ်</div>
-    </div>
-
-    <div id="wallet-panel" class="wallet-overlay" style="display:none;">
-        <div class="wallet-content">
-            <span class="close" onclick="closeWallet()">&times;</span>
-            <div id="wallet-body"></div>
-        </div>
-    </div>
+    <audio id="snd-card" src="https://actions.google.com/sounds/v1/foley/card_shuffle.ogg"></audio>
+    <audio id="snd-win" src="https://actions.google.com/sounds/v1/cartoon/clinker_win.ogg"></audio>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
