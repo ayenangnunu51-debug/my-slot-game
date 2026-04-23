@@ -1,29 +1,27 @@
-:root { --gold: #ffd700; --green: #0a5d2e; }
+:root { --gold: #ffd700; --green: #1a4a2e; }
 body { background: #0b0b1a; color: white; font-family: sans-serif; margin: 0; text-align: center; }
 .app-container { max-width: 480px; margin: auto; padding: 15px; min-height: 100vh; }
 .glass-box, .game-panel { background: #16162d; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; }
 
-/* Timer Style */
-.progress-container { width: 100%; height: 6px; background: #222; border-radius: 3px; margin: 10px 0; overflow: hidden; }
-#timer-bar { width: 100%; height: 100%; background: var(--gold); transition: width 1s linear; }
-#timer-num { font-size: 20px; font-weight: bold; color: var(--gold); }
-
-/* Shan Table */
-.shan-table { background: radial-gradient(var(--green), #05331a); border: 8px solid #3e2723; border-radius: 40px; padding: 15px; }
-.card-row { display: flex; justify-content: center; gap: 4px; min-height: 55px; }
-.players-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-
-/* Cards */
-.card { width: 38px; height: 55px; background: white; border-radius: 4px; color: black; position: relative; font-weight: bold; }
+/* Table Design */
+.casino-table { background: radial-gradient(circle, var(--green) 0%, #0d2b1a 100%); border: 12px solid #5d4037; border-radius: 150px; height: 380px; position: relative; margin: 20px 0; box-shadow: inset 0 0 50px #000; }
+.card-fan { display: flex; justify-content: center; height: 60px; perspective: 500px; }
+.card { width: 38px; height: 55px; background: white; border-radius: 4px; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); position: relative; margin-left: -15px; color: black; font-weight: bold; }
 .card.red { color: #d00; }
 .card .t { position: absolute; top: 2px; left: 2px; font-size: 10px; }
 .card .m { font-size: 18px; margin-top: 15px; }
 
-.p-slot { font-size: 10px; }
-.highlight { border: 1px solid var(--gold); border-radius: 8px; background: rgba(255,215,0,0.1); }
-.nav-item { flex: 1; padding: 10px; background: #222; border: none; color: #fff; cursor: pointer; }
-.nav-item.active { background: var(--gold); color: #000; font-weight: bold; }
-.action-btn, .gold-btn { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-input { width: 85%; padding: 12px; margin-bottom: 10px; background: #000; color: #fff; border: 1px solid #444; }
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; }
-.modal-box { background: #16162d; padding: 25px; border-radius: 15px; width: 80%; }
+/* Positions */
+.p-seat { position: absolute; font-size: 10px; }
+.p1 { top: 25%; left: 10%; } .p2 { top: 25%; right: 10%; }
+.p3 { bottom: 25%; left: 15%; } .p4 { bottom: 25%; right: 15%; }
+.active-user { bottom: 5%; left: 50%; transform: translateX(-50%); }
+.user-info { background: rgba(255,215,0,0.1); border: 1px solid var(--gold); border-radius: 15px; padding: 5px 10px; }
+
+/* Timer & UI */
+.progress-container { width: 100%; height: 6px; background: #222; border-radius: 3px; overflow: hidden; margin: 5px 0; }
+#timer-bar { width: 100%; height: 100%; background: var(--gold); transition: width 1s linear; }
+.live-indicator { color: #ff4d4d; font-weight: bold; font-size: 12px; margin-bottom: 5px; }
+.dot { width: 8px; height: 8px; background: red; border-radius: 50%; display: inline-block; animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity: 0.3; } }
+.bet-action-btn { width: 85%; padding: 15px; background: linear-gradient(var(--gold), #b8860b); border: none; border-radius: 25px; font-weight: bold; cursor: pointer; }
