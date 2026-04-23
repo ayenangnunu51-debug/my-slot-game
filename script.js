@@ -6,7 +6,6 @@ const _supabase = supabase.createClient(SB_URL, SB_KEY);
 let coins = 0;
 let username = localStorage.getItem('game_username') || null;
 
-// Page စဖွင့်ချိန်တွင် အကောင့်ဝင်ထားလျှင် အချက်အလက်ယူမည်
 async function init() {
     if (username) {
         await fetchUserData();
@@ -14,7 +13,6 @@ async function init() {
     updateUI();
 }
 
-// Database မှ ပိုက်ဆံလက်ကျန်ကို ယူခြင်း
 async function fetchUserData() {
     try {
         const { data, error } = await _supabase.from('profiles').select('coins').eq('username', username).single();
@@ -22,10 +20,9 @@ async function fetchUserData() {
             coins = data.coins; 
             updateUI(); 
         }
-    } catch (e) { console.log("Error fetching data:", e); }
+    } catch (e) { console.log(e); }
 }
 
-// UI ပြောင်းလဲခြင်း (Logout button ပါဝင်သည်)
 function updateUI() {
     const authUI = document.getElementById('auth-ui');
     if (!authUI) return;
@@ -48,7 +45,6 @@ function updateUI() {
     }
 }
 
-// Logout စနစ်
 function logout() {
     if(confirm("အကောင့်မှ ထွက်မှာ သေချာပါသလား?")) {
         localStorage.removeItem('game_username');
@@ -58,7 +54,6 @@ function logout() {
     }
 }
 
-// Login လုပ်ဆောင်ချက်
 async function login() {
     const u = document.getElementById('login-user').value.trim();
     const p = document.getElementById('login-pass').value;
@@ -77,56 +72,69 @@ async function login() {
     }
 }
 
-// အကောင့်ဖွင့်ရန် Popup ပြသခြင်း
 function showSignup() {
     const panel = document.getElementById('wallet-panel');
     const body = document.getElementById('wallet-body');
-    if(panel) panel.style.display = 'flex';
-    if(body) {
-        body.innerHTML = `
-            <h3 style="color:gold;">အကောင့်သစ်ဖွင့်ရန်</h3>
-            <input type="text" id="reg-user" placeholder="အမည်သစ် (Username)" style="width:80%; padding:8px; margin:5px;">
-            <input type="password" id="reg-pass" placeholder="လျှို့ဝှက်နံပါတ် (အနည်းဆုံး ၆ လုံး)" style="width:80%; padding:8px; margin:5px;">
-            <button class="login-btn" style="margin-top:10px;" onclick="handleSignup()">အကောင့်ဖွင့်မည်</button>
-        `;
-    }
+    panel.style.display = 'flex';
+    body.innerHTML = `
+        <h3 style="color:gold;">အကောင့်သစ်ဖွင့်ရန်</h3>
+        <input type="text" id="reg-user" placeholder="အမည်သစ် (Username)">
+        <input type="password" id="reg-pass" placeholder="လျှို့ဝှက်နံပါတ် (အနည်းဆုံး ၆ လုံး)">
+        <button class="login-btn" style="margin-top:10px;" onclick="handleSignup()">အကောင့်ဖွင့်မည်</button>
+    `;
 }
 
-// အကောင့်သစ်ဖွင့်ခြင်း (Fixed Version)
+// ဒီအပိုင်းမှာ error တက်နေတာကို ပြင်ထားပါတယ်
 async function handleSignup() {
     const newUser = document.getElementById('reg-user').value.trim();
     const newPass = document.getElementById('reg-pass').value;
 
     if (!newUser || newPass.length < 6) {
-        return alert("အမည်ထည့်ပါ (သို့) Password အနည်းဆုံး ၆ လုံး ရှိရပါမည်။");
+        return alert("အမည်ထည့်ပါ သို့မဟုတ် Password အနည်းဆုံး ၆ လုံး ရှိရပါမည်။");
     }
 
-    // အမည်တူ ရှိမရှိ အရင်စစ်ဆေးခြင်း
-    const { data: existingUser } = await _supabase.from('profiles').select('username').eq('username', newUser).maybeSingle();
-    if (existingUser) return alert("ဒီအမည်က ရှိပြီးသားဖြစ်နေလို့ တခြားအမည်တစ်ခု သုံးပေးပါ။");
+    try {
+        // အမည်တူ ရှိမရှိ အရင်စစ်ဆေးခြင်း
+        const { data: existingUser, error: checkError } = await _supabase
+            .from('profiles')
+            .select('username')
+            .eq('username', newUser);
 
-    // အကောင့်သစ် ထည့်သွင်းခြင်း (Coins ၅၀၀၀ ပေးထားသည်)
-    const { error } = await _supabase.from('profiles').insert([{ username: newUser, password: newPass, coins: 5000 }]);
+        if (existingUser && existingUser.length > 0) {
+            return alert("ဒီအမည်က ရှိပြီးသားဖြစ်နေလို့ တခြားအမည်တစ်ခု သုံးပေးပါ။");
+        }
 
-    if (!error) {
-        alert("အကောင့်ဖွင့်ခြင်း အောင်မြင်ပါသည်။");
-        localStorage.setItem('game_username', newUser);
-        username = newUser;
-        coins = 5000;
-        closeWallet(); // Popup ပိတ်မည်
-        updateUI();    // UI ကို Logout button ပါသော ပုံစံသို့ ပြောင်းမည်
-    } else {
-        console.error("Signup Error:", error);
-        alert("အကောင့်ဖွင့်မရပါ။ profiles Table ထဲတွင် username, password, coins column များ ရှိမရှိ စစ်ပေးပါ။");
+        // အကောင့်သစ် ထည့်သွင်းခြင်း
+        const { error: insertError } = await _supabase
+            .from('profiles')
+            .insert([{ 
+                username: newUser, 
+                password: newPass, 
+                coins: 5000 
+            }]);
+
+        if (insertError) {
+            console.error("Insert Error:", insertError);
+            alert("Database ထဲ ထည့်မရဖြစ်နေပါတယ်။ Table structure ကို ပြန်စစ်ကြည့်ပါ။");
+        } else {
+            alert("အကောင့်ဖွင့်ခြင်း အောင်မြင်ပါသည်။");
+            localStorage.setItem('game_username', newUser);
+            username = newUser;
+            coins = 5000;
+            closeWallet();
+            updateUI();
+        }
+    } catch (err) {
+        console.error("Unexpected Error:", err);
+        alert("မထင်မှတ်ထားသော အမှားတစ်ခု ရှိနေပါသည်။");
     }
 }
 
-// Wallet နှင့် Slot ဆိုင်ရာ Function များ
 function showWallet(type) {
     if (!username) return alert("အရင်ဆုံး အကောင့်ဝင်ပါ");
     const panel = document.getElementById('wallet-panel');
     const body = document.getElementById('wallet-body');
-    if(panel) panel.style.display = 'flex';
+    panel.style.display = 'flex';
     if (type === 'deposit') {
         body.innerHTML = `<h3 style="color:gold;">ငွေသွင်းရန်</h3><p>Kpay/Wave: 09-XXXXXXXX</p><input type="number" id="amt" placeholder="ပမာဏ"><button class="login-btn" onclick="handleWallet('in')">တင်ပြမည်</button>`;
     } else {
@@ -149,10 +157,7 @@ async function handleWallet(action) {
     }
 }
 
-function closeWallet() {
-    const panel = document.getElementById('wallet-panel');
-    if(panel) panel.style.display = 'none';
-}
+function closeWallet() { document.getElementById('wallet-panel').style.display = 'none'; }
 
 async function spinSlot() {
     if (!username) return alert("အရင်ဆုံး အကောင့်ဝင်ပါ");
