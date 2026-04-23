@@ -8,13 +8,13 @@
 </head>
 <body>
     <div class="app-container auth-page">
-        <h1 style="color: gold; text-shadow: 0 0 10px gold;">GOLDEN CASINO</h1>
+        <h1 style="color: gold; text-shadow: 0 0 15px gold;">GOLDEN CASINO</h1>
         <div class="game-box">
-            <h2 id="auth-title">CREATE ACCOUNT</h2>
+            <h2 id="auth-title" style="letter-spacing: 2px;">CREATE ACCOUNT</h2>
             <input type="text" id="username" placeholder="နာမည် (Username)" required>
             <input type="password" id="password" placeholder="စကားဝှက် (Password)" required>
             <button onclick="handleAuth()" id="auth-btn" class="action-btn">အကောင့်ဖွင့်မည်</button>
-            <p id="toggle-auth" onclick="switchMode()">အကောင့်ရှိပြီးသားလား? <span style="color: gold;">Login ဝင်ပါ</span></p>
+            <p id="toggle-auth" onclick="switchMode()" style="cursor:pointer; margin-top:15px;">အကောင့်ရှိပြီးသားလား? <span style="color: gold;">Login ဝင်ပါ</span></p>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
