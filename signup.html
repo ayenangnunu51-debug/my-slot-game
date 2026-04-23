@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="my">
-<head>
-    <meta charset="UTF-8">
-    <title>Login / Signup</title>
-    <style>body{background:#0a0a0a; color:white; text-align:center; padding-top:100px;}</style>
-</head>
-<body>
-    <h2>ဂိမ်းအကောင့်ဝင်ရန်</h2>
-    <input type="text" id="username" placeholder="နာမည်ရိုက်ပါ" style="padding:10px;"><br><br>
-    <button onclick="login()" style="padding:10px 20px; background:gold; border:none; cursor:pointer; font-weight:bold;">ဝင်မည် (LOGIN)</button>
+<head><meta charset="UTF-8"><title>အကောင့်သစ်ဖွင့်ရန်</title></head>
+<body style="background:#0a0a0a; color:white; text-align:center; padding-top:100px;">
+    <h2>Casino Signup</h2>
+    <input type="text" id="name" placeholder="အမည်ရိုက်ပါ" style="padding:10px;"><br><br>
+    <button onclick="register()" style="padding:10px 20px; background:gold; border:none; cursor:pointer;">START GAME</button>
 
     <script>
-        function login() {
-            const name = document.getElementById('username').value;
-            if(!name) return;
+        function register() {
+            const name = document.getElementById('name').value;
+            if(!name) return alert("အမည်ထည့်ပါ");
             localStorage.setItem('game_user_id', 'user_' + Date.now());
             window.location.href = 'index.html';
         }
