@@ -3,75 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Casino - All in One</title>
+    <title>Golden Casino - All-in-One</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="app-container">
-        <div id="header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
-            <div>
-                <h4 style="color: gold; margin: 0;">👤 <span id="user-name">...</span></h4>
-                <button onclick="handleLogout()" style="background:none; border:none; color:red; cursor:pointer;">Logout</button>
+        <div class="game-header">
+            <div class="user-info">
+                <span style="color: gold;"><i class="fas fa-user-circle"></i> <span id="user-name">...</span></span>
+                <button onclick="handleLogout()" class="logout-link">Logout</button>
             </div>
-            <h3 style="background: #222; padding: 10px; border-radius: 10px; margin: 0;">💰 <span id="balance">0</span> K</h3>
+            <div class="balance-box">
+                💰 <span id="balance">0</span> K
+            </div>
         </div>
 
-        <div style="margin: 10px 0; color: white;">
-            လောင်ကြေးရွေးပါ: 
-            <select id="bet-amount" style="padding: 5px; background: #000; color: gold; border: 1px solid gold;">
+        <div class="bet-container">
+            <span>လောင်းကြေး:</span>
+            <select id="bet-amount" class="bet-select">
                 <option value="100">100 K</option>
-                <option value="200">200 K</option>
-                <option value="300">300 K</option>
                 <option value="500">500 K</option>
-                <option value="1000">1000 K</option>
+                <option value="1000">1,000 K</option>
+                <option value="5000">5,000 K</option>
+                <option value="10000">10,000 K</option>
             </select>
         </div>
 
-        <div style="margin: 10px 0; display: flex; justify-content: center; gap: 10px;">
-            <button onclick="showWallet('deposit')" class="play-btn" style="background:#28a745; width:45%;">ငွေသွင်း</button>
-            <button onclick="showWallet('withdraw')" class="play-btn" style="background:#dc3545; width:45%;">ငွေထုတ်</button>
+        <div class="game-nav">
+            <button onclick="switchGame('slot')" id="nav-slot" class="nav-btn active">Slot</button>
+            <button onclick="switchGame('dice')" id="nav-dice" class="nav-btn">Dice</button>
+            <button onclick="switchGame('wheel')" id="nav-wheel" class="nav-btn">Wheel</button>
         </div>
 
-        <div style="display: flex; gap: 5px; margin-bottom: 15px;">
-            <button onclick="switchGame('slot')" class="play-btn" style="flex:1; font-size: 0.8rem;">SLOT</button>
-            <button onclick="switchGame('dice')" class="play-btn" style="flex:1; font-size: 0.8rem;">DICE</button>
-            <button onclick="switchGame('wheel')" class="play-btn" style="flex:1; font-size: 0.8rem;">WHEEL</button>
-        </div>
-
-        <div id="slot-area" class="game-box">
-            <div style="font-size: 3rem; margin: 20px 0;">
-                <span id="r1">🎰</span> <span id="r2">🎰</span> <span id="r3">🎰</span>
+        <div id="slot-area" class="game-display">
+            <div class="slot-machine">
+                <div id="r1" class="reel">🎰</div>
+                <div id="r2" class="reel">🎰</div>
+                <div id="r3" class="reel">🎰</div>
             </div>
-            <button class="play-btn" onclick="playSlot()" style="width: 100%;">SPIN</button>
+            <button onclick="playSlot()" id="spin-btn" class="action-btn">SPIN NOW</button>
         </div>
 
-        <div id="dice-area" class="game-box" style="display: none;">
-            <div id="dice-result" style="font-size: 4rem; margin: 20px 0;">🎲</div>
-            <button class="play-btn" onclick="playDice()" style="width: 100%;">ROLL DICE</button>
-        </div>
-
-        <div id="wheel-area" class="game-box" style="display: none;">
-            <div id="wheel-box" style="width: 150px; height: 150px; border: 5px solid gold; border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 2rem;">🎡</div>
-            <button class="play-btn" onclick="playWheel()" style="width: 100%;">SPIN WHEEL</button>
-        </div>
-
-        <div id="wallet-modal" class="game-box" style="display: none; position: fixed; top: 10%; left: 5%; width: 85%; z-index: 1000; background: #1a1a2e; border: 2px solid gold; padding: 20px; border-radius: 15px;">
-            <h3 id="wallet-title" style="color: gold;">ငွေသွင်း/ထုတ်</h3>
-            <div id="deposit-info" style="text-align: left; font-size: 0.8rem; margin-bottom: 10px; color: #ccc;">
-                <p>Kpay/Wave: 09680575421</p>
+        <div id="dice-area" class="game-display" style="display: none;">
+            <div class="dice-container">
+                <div id="dice-box" class="dice">⚀</div>
             </div>
-            <p style="text-align: left; font-size: 0.8rem; color: gold;">လက်ရှိ: <span id="cur-bal">0</span> K</p>
-            <input type="number" id="wallet-amount" oninput="calculateBalance()" placeholder="ပမာဏ" style="width: 90%; padding: 10px; margin-bottom: 10px;">
-            <input type="text" id="target-phone" placeholder="ငွေလက်ခံမည့်ဖုန်းနံပါတ်" style="width: 90%; padding: 10px; margin-bottom: 10px;">
-            <p id="rem-info" style="color: #00ff00; font-size: 0.8rem; text-align: left;">ကျန်မည့်ငွေ: <span id="rem-bal">0</span> K</p>
-            <button class="play-btn" onclick="submitWalletRequest()">တင်ပြမည်</button>
-            <button class="play-btn" style="background:#555;" onclick="closeWallet()">ပိတ်ပါ</button>
+            <div class="dice-controls">
+                <button onclick="playDice('high')" class="action-btn" style="background: #28a745;">အကြီး (၄,၅,၆)</button>
+                <button onclick="playDice('low')" class="action-btn" style="background: #dc3545;">အသေး (၁,၂,၃)</button>
+            </div>
+        </div>
+
+        <div id="wheel-area" class="game-display" style="display: none;">
+            <div class="wheel-outer">
+                <div id="wheel-pointer">▼</div>
+                <div id="wheel-circle" class="wheel">🎡</div>
+            </div>
+            <button onclick="playWheel()" id="wheel-btn" class="action-btn">SPIN WHEEL</button>
+        </div>
+
+        <div class="wallet-footer">
+            <button onclick="showWallet('deposit')" class="w-btn d-btn">ငွေသွင်း</button>
+            <button onclick="showWallet('withdraw')" class="w-btn w-btn-red">ငွေထုတ်</button>
+        </div>
+
+        <div id="wallet-modal" class="modal">
+            <div class="modal-content">
+                <h3 id="wallet-title" style="color: gold;">ငွေသွင်းမည်</h3>
+                <div id="bank-info" class="bank-card">
+                    <p>Kpay/Wave: 09680575421</p>
+                    <p>Name: Thant Naing Aye</p>
+                </div>
+                <input type="number" id="wallet-amount" oninput="updateRemBalance()" placeholder="ပမာဏ">
+                <input type="text" id="wallet-details" placeholder="ID (သို့) ဖုန်းနံပါတ်">
+                <div class="rem-bal-text">ကျန်မည့်ငွေ: <span id="rem-bal">0</span> K</div>
+                <div class="modal-btns">
+                    <button onclick="submitRequest()" class="action-btn">Confirm</button>
+                    <button onclick="closeWallet()" class="action-btn grey-btn">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <audio id="sound-spin" src="https://www.soundjay.com/misc/sounds/slot-machine-payout-01.mp3"></audio>
-    <audio id="sound-win" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
-    <audio id="sound-dice" src="https://www.soundjay.com/misc/sounds/dice-roll-01.mp3"></audio>
+    <audio id="snd-spin" src="https://www.soundjay.com/misc/sounds/slot-machine-payout-01.mp3"></audio>
+    <audio id="snd-win" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+    <audio id="snd-dice" src="https://www.soundjay.com/misc/sounds/dice-roll-01.mp3"></audio>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
