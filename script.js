@@ -1,5 +1,5 @@
-// ပုံထဲက API Key အတိုင်း အတိအကျ ပြန်ပြင်ထားပါတယ်
-const SB_URL = "https://mgxhoraoblmrqvyjaiw.supabase.co"; 
+// ၁။ Supabase Keys များ (URL ထဲက 'b' ကို ဖြုတ်ပြီး API Key အမှန်ကို ထည့်ထားပါတယ်)
+const SB_URL = "https://mgxhoraolmrqvyjaiw.supabase.co"; 
 const SB_KEY = "sb_publishable_wIgcdXqvZTr9MJeV6vAEYw_bMSsvD3J"; 
 const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
@@ -84,7 +84,7 @@ function showSignup() {
     `;
 }
 
-// အကောင့်သစ်ဖွင့်ခြင်း Logic (Fixed)
+// အကောင့်သစ်ဖွင့်ခြင်း Logic (last_login column ပါ ထည့်သွင်းထားပါတယ်)
 async function handleSignup() {
     const newUser = document.getElementById('reg-user').value.trim();
     const newPass = document.getElementById('reg-pass').value;
@@ -94,7 +94,6 @@ async function handleSignup() {
     }
 
     try {
-        // ၁။ အမည်တူ ရှိမရှိ အရင်စစ်ဆေးခြင်း
         const { data: existingUser } = await _supabase
             .from('profiles')
             .select('username')
@@ -104,13 +103,13 @@ async function handleSignup() {
             return alert("ဒီအမည်က ရှိပြီးသားဖြစ်နေလို့ တခြားအမည်တစ်ခု သုံးပေးပါ။");
         }
 
-        // ၂။ အကောင့်သစ် ထည့်သွင်းခြင်း
         const { error: insertError } = await _supabase
             .from('profiles')
             .insert([{ 
                 username: newUser, 
                 password: newPass, 
-                coins: 5000 
+                coins: 5000,
+                last_login: new Date().toISOString() // Table အသစ်အတွက် အချိန်ထည့်ခြင်း
             }]);
 
         if (insertError) {
