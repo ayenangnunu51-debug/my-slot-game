@@ -3,81 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Casino - Home</title>
+    <title>Golden Casino - All-in-One</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="app-container">
+    <div id="auth-screen" class="app-container">
+        <h1 style="color: gold; text-align: center;">GOLDEN CASINO</h1>
+        <div class="game-box">
+            <h2 id="auth-title">CREATE ACCOUNT</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="handleAuth()" id="auth-btn" class="action-btn">အကောင့်ဖွင့်မည်</button>
+            <p onclick="toggleAuth()" id="auth-toggle" style="margin-top:15px; cursor:pointer;">အကောင့်ရှိပြီးသားလား? <span style="color: gold;">ဝင်ပါ</span></p>
+        </div>
+    </div>
+
+    <div id="game-screen" class="app-container" style="display: none;">
         <div class="game-header">
-            <div class="user-info">
-                <span style="color: gold;"><i class="fas fa-user-circle"></i> <span id="user-name">...</span></span>
-                <button onclick="handleLogout()" class="logout-link">Logout</button>
-            </div>
-            <div class="balance-display">💰 <span id="balance">0</span> K</div>
+            <div><i class="fas fa-user-circle"></i> <span id="display-user">...</span></div>
+            <div class="balance-box">💰 <span id="balance">0</span> K</div>
+            <button onclick="handleLogout()" class="logout-btn">ထွက်ရန်</button>
         </div>
 
-        <div class="bet-selection">
-            <span>BET AMOUNT:</span>
-            <select id="bet-amount" class="bet-input">
+        <div class="bet-area">
+            BET: <select id="bet-amount">
                 <option value="100">100 K</option>
                 <option value="500">500 K</option>
-                <option value="1000">1,000 K</option>
-                <option value="5000">5,000 K</option>
+                <option value="1000">1000 K</option>
+                <option value="5000">5000 K</option>
             </select>
         </div>
 
         <div class="game-nav">
-            <button onclick="switchGame('slot')" id="nav-slot" class="nav-item active">SLOT</button>
-            <button onclick="switchGame('dice')" id="nav-dice" class="nav-item">DICE</button>
-            <button onclick="switchGame('wheel')" id="nav-wheel" class="nav-item">WHEEL</button>
+            <button onclick="showGame('slot')" class="nav-btn active" id="btn-slot">SLOT</button>
+            <button onclick="showGame('dice')" class="nav-btn" id="btn-dice">DICE</button>
+            <button onclick="showGame('wheel')" class="nav-btn" id="btn-wheel">WHEEL</button>
         </div>
 
-        <div id="slot-area" class="game-panel">
-            <div class="slot-container">
-                <div id="r1" class="reel">🎰</div>
-                <div id="r2" class="reel">🎰</div>
-                <div id="r3" class="reel">🎰</div>
-            </div>
-            <button onclick="playSlot()" class="action-btn spin-btn">SPIN NOW</button>
+        <div id="slot-game" class="game-panel">
+            <div class="reels"><span id="r1">🎰</span><span id="r2">🎰</span><span id="r3">🎰</span></div>
+            <button onclick="playSlot()" class="action-btn">SPIN</button>
         </div>
 
-        <div id="dice-area" class="game-panel" style="display: none;">
-            <div id="dice-box" class="dice-view">🎲</div>
-            <div class="dice-btns">
-                <button onclick="playDice('high')" class="action-btn btn-high">အကြီး (၄,၅,၆)</button>
-                <button onclick="playDice('low')" class="action-btn btn-low">အသေး (၁,၂,၃)</button>
+        <div id="dice-game" class="game-panel" style="display:none;">
+            <div id="dice-view" style="font-size: 5rem;">🎲</div>
+            <div class="dice-controls">
+                <button onclick="playDice('high')" class="action-btn" style="background: green;">အကြီး</button>
+                <button onclick="playDice('low')" class="action-btn" style="background: red;">အသေး</button>
             </div>
         </div>
 
-        <div id="wheel-area" class="game-panel" style="display: none;">
-            <div class="wheel-box">
+        <div id="wheel-game" class="game-panel" style="display:none;">
+            <div class="wheel-container">
                 <div id="pointer">▼</div>
-                <div id="wheel-inner" class="wheel-circle">🎡</div>
+                <div id="wheel-inner">🎡</div>
             </div>
-            <button onclick="playWheel()" class="action-btn">SPIN WHEEL</button>
+            <button onclick="playWheel()" class="action-btn">WHEEL SPIN</button>
         </div>
 
-        <div class="footer-btns">
-            <button onclick="showWallet('deposit')" class="w-btn dep-btn">ငွေသွင်း</button>
-            <button onclick="showWallet('withdraw')" class="w-btn wit-btn">ငွေထုတ်</button>
+        <div class="wallet-footer">
+            <button onclick="openWallet('deposit')" class="w-btn dep">ငွေသွင်း</button>
+            <button onclick="openWallet('withdraw')" class="w-btn wit">ငွေထုတ်</button>
         </div>
+    </div>
 
-        <div id="wallet-modal" class="modal-overlay">
-            <div class="modal-card">
-                <h3 id="wallet-title" style="color: gold;">TRANSACTION</h3>
-                <div class="bank-info">
-                    <p>KBZ Pay / Wave: 09680575421</p>
-                    <p>Name: Thant Naing Aye</p>
-                </div>
-                <input type="number" id="wallet-amount" oninput="updateRemCalc()" placeholder="ပမာဏထည့်ပါ">
-                <input type="text" id="wallet-phone" placeholder="ဖုန်းနံပါတ်/ID ထည့်ပါ">
-                <div style="margin: 10px 0; font-size: 0.8rem;">ကျန်မည့်ငွေ: <span id="modal-rem-bal">0</span> K</div>
-                <div class="modal-actions">
-                    <button onclick="submitWallet()" class="action-btn">CONFIRM</button>
-                    <button onclick="closeWallet()" class="action-btn cancel-btn">CLOSE</button>
-                </div>
-            </div>
+    <div id="wallet-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="w-title">ငွေသွင်းမည်</h3>
+            <p style="font-size: 0.8rem; background: #000; padding: 5px;">Kpay/Wave: 09680575421 (Name: Thant Naing Aye)</p>
+            <input type="number" id="w-amount" placeholder="ပမာဏ">
+            <input type="text" id="w-phone" placeholder="ဖုန်းနံပါတ်">
+            <button onclick="submitWallet()" class="action-btn">တင်ပြမည်</button>
+            <button onclick="closeWallet()" class="action-btn" style="background: #555;">ပိတ်ပါ</button>
         </div>
     </div>
 
