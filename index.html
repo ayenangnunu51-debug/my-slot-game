@@ -13,32 +13,24 @@
             <input type="text" id="login-user" placeholder="အမည်">
             <input type="password" id="login-pass" placeholder="လျှို့ဝှက်နံပါတ်">
             <button class="login-btn" onclick="login()">ဝင်မည်</button>
-            <div style="font-size: 10px; margin-top: 5px; cursor: pointer; color: gold; text-align: center;" onclick="showSignup()">
-                အကောင့်မရှိသေးပါက ဖွင့်ရန်
-            </div>
+            <div style="font-size: 10px; margin-top: 5px; cursor: pointer; color: gold;" onclick="showSignup()">အကောင့်မရှိသေးပါက ဖွင့်ရန်</div>
         </div>
-    </div>
-
-    <div class="category-nav">
-        <div class="cat-item active">🏠<br>HOME</div>
-        <div class="cat-item">🎰<br>စလော့</div>
-        <div class="cat-item">🃏<br>ကာစီနို</div>
-        <div class="cat-item">⚽<br>အားကစား</div>
-        <div class="cat-item">🐟<br>ငါးဖမ်း</div>
     </div>
 
     <div class="main-banner">
         <div class="promo-text">
             <h2>မန်ဘာသစ် 50%</h2>
             <p>နေ့စဉ်ဘောနပ် 20%</p>
-            <div class="cashback" onclick="spinSlot()">စလော့လှည့်မည် (100 K)</div>
+            <button class="cashback" style="background:red; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; cursor:pointer;" onclick="spinSlot()">
+                စလော့လှည့်မည် (100 K)
+            </button>
         </div>
     </div>
 
     <div class="bottom-menu">
         <div class="menu-item">🎁<br>ပရိုမိုးရှင်း</div>
-        <div class="menu-item">💬<br>တိုက်ရိုက်စကားပြော</div>
-        <div class="menu-item main-btn">🏠<br>ပင်မ</div>
+        <div class="menu-item" onclick="alert('Live Chat ကို ဆက်သွယ်နေပါသည်...')">💬<br>တိုက်ရိုက်စကားပြော</div>
+        <div class="menu-item main-btn" onclick="location.reload()">🏠<br>ပင်မ</div>
         <div class="menu-item" onclick="showWallet('deposit')">💰<br>ငွေသွင်း</div>
         <div class="menu-item" onclick="showWallet('withdraw')">💵<br>ငွေထုတ်</div>
     </div>
