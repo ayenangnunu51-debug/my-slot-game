@@ -6,7 +6,6 @@ const _supabase = supabase.createClient(SB_URL, SB_KEY);
 let coins = 0;
 let username = localStorage.getItem('game_username') || null;
 
-// Page စဖွင့်တာနဲ့ အချက်အလက်ယူမည်
 async function init() {
     if (username) {
         await fetchUserData();
@@ -14,7 +13,6 @@ async function init() {
     updateUI();
 }
 
-// Database ထဲက Coins ပမာဏကို သွားယူခြင်း
 async function fetchUserData() {
     const { data, error } = await _supabase.from('profiles').select('coins').eq('username', username).single();
     if (data) { 
@@ -23,26 +21,39 @@ async function fetchUserData() {
     }
 }
 
-// UI ကို ပြောင်းလဲပေးခြင်း (Logout Button ပါဝင်သည်)
+// UI ကို ပြောင်းလဲပေးခြင်း (Logout Button နှင့် Login Box နှစ်မျိုးလုံးပါဝင်သည်)
 function updateUI() {
     const authUI = document.getElementById('auth-ui');
-    if (username && authUI) {
+    if (!authUI) return;
+
+    if (username) {
+        // အကောင့်ဝင်ထားလျှင် - နာမည်၊ ပိုက်ဆံ နှင့် Logout ခလုတ်ကို ပြပါ
         authUI.innerHTML = `
             <div style="text-align:right; color:gold; font-size: 14px;">
-                <b>${username}</b> <br> 
+                <b style="color:white;">${username}</b> <br> 
                 💰 ${coins.toLocaleString()} K 
-                <button onclick="logout()" style="background:red; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer; margin-top:5px;">ထွက်မည်</button>
+                <button onclick="logout()" style="background:red; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer; margin-top:5px; font-size:11px;">ထွက်မည်</button>
             </div>
+        `;
+    } else {
+        // အကောင့်ထွက်ထားလျှင် - မူလ Login Box ကို ပြန်ပြပါ
+        authUI.innerHTML = `
+            <input type="text" id="login-user" placeholder="အမည်">
+            <input type="password" id="login-pass" placeholder="လျှို့ဝှက်နံပါတ်">
+            <button class="login-btn" onclick="login()">ဝင်မည်</button>
+            <div style="font-size: 10px; margin-top: 5px; cursor: pointer; color: gold; text-align: center;" onclick="showSignup()">အကောင့်မရှိသေးပါက ဖွင့်ရန်</div>
         `;
     }
 }
 
 // Logout စနစ်
 function logout() {
-    localStorage.removeItem('game_username');
-    username = null;
-    coins = 0;
-    location.reload(); // Page ကို Refresh လုပ်ပါ
+    if(confirm("အကောင့်မှ ထွက်မှာ သေချာပါသလား?")) {
+        localStorage.removeItem('game_username');
+        username = null;
+        coins = 0;
+        updateUI(); // UI ကို Login box ပြန်ဖြစ်အောင် ပြောင်းမည်
+    }
 }
 
 // Login လုပ်ဆောင်ချက်
@@ -85,11 +96,9 @@ async function handleSignup() {
     if (newPass.length < 6) return alert("Password က အနည်းဆုံး ၆ လုံး ရှိရပါမယ်။");
     if (!newUser) return alert("အမည် ထည့်သွင်းပါ။");
 
-    // အမည်တူ ရှိမရှိ အရင်စစ်ဆေးခြင်း
     const { data: existingUser } = await _supabase.from('profiles').select('username').eq('username', newUser).maybeSingle();
     if (existingUser) return alert("ဒီအမည်က ရှိပြီးသားဖြစ်နေလို့ တခြားအမည်တစ်ခု သုံးပေးပါ။");
 
-    // အကောင့်သစ် ထည့်သွင်းခြင်း
     const { error } = await _supabase.from('profiles').insert([{ username: newUser, password: newPass, coins: 5000 }]);
 
     if (!error) {
@@ -141,14 +150,10 @@ async function spinSlot() {
     
     coins -= 100; 
     updateUI();
-    
-    // Database မှာ Coins နှုတ်ခြင်း
     const { error } = await _supabase.from('profiles').update({ coins: coins }).eq('username', username);
     
     if(!error) {
-        alert("စလော့လှည့်နေပါသည်... (နမူနာအနေနဲ့ ၁၀၀ နှုတ်လိုက်ပါပြီ)");
-    } else {
-        alert("Error: Database ချိတ်ဆက်မှု အဆင်မပြေပါ");
+        alert("စလော့လှည့်နေပါသည်...");
     }
 }
 
