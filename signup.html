@@ -3,21 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Slot - Signup/Login</title>
+    <title>Golden Slot - Signup</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-container">
-        <h2 id="title" style="color: gold; margin-top: 50px;">Golden Slot</h2>
+        <h2 id="title" style="color: gold;">Golden Slot</h2>
         <div class="game-box">
-            <input type="text" id="username" placeholder="နာမည် (Username)" style="width: 85%; padding: 15px; margin-bottom: 15px; border-radius: 10px; background: #000; color: white; border: 1px solid #333;">
-            <input type="password" id="password" placeholder="Password (အနည်းဆုံး ၆ လုံး)" style="width: 85%; padding: 15px; margin-bottom: 20px; border-radius: 10px; background: #000; color: white; border: 1px solid #333;">
-            
-            <button class="play-btn" id="btn-action" onclick="handleAuth()">အကောင့်အသစ်ဖွင့်မည်</button>
-            
-            <p id="toggle-text" style="margin-top: 20px; color: #888; cursor: pointer;" onclick="switchMode()">
-                အကောင့်ရှိပြီးသားလား? <span style="color: gold;">ဒီမှာ Login ဝင်ပါ</span>
-            </p>
+            <input type="text" id="username" placeholder="နာမည်ရိုက်ထည့်ပါ" style="width: 85%; padding: 12px; margin-bottom: 10px;">
+            <input type="password" id="password" placeholder="Password (၆ လုံး)" style="width: 85%; padding: 12px; margin-bottom: 15px;">
+            <button id="btn-action" class="play-btn" onclick="handleAuth()" style="width: 90%;">အကောင့်ဖွင့်မည်</button>
+            <p id="toggle-text" onclick="switchMode()" style="color: #ccc; cursor: pointer; margin-top: 15px;">အကောင့်ရှိပြီးသားလား? <span style="color: gold;">Login ဝင်ပါ</span></p>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
