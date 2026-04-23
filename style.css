@@ -1,30 +1,29 @@
 :root { --gold: #ffd700; --green: #0a5d2e; }
 body { background: #0b0b1a; color: white; font-family: sans-serif; margin: 0; text-align: center; }
-.app-container { max-width: 500px; margin: auto; padding: 20px; min-height: 100vh; }
+.app-container { max-width: 480px; margin: auto; padding: 15px; min-height: 100vh; }
+.glass-box, .game-panel { background: #16162d; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; }
 
-.shan-table { 
-    background: radial-gradient(var(--green), #05331a); 
-    border: 8px solid #3e2723; border-radius: 40px; padding: 15px; 
-}
-.card-row { display: flex; justify-content: center; gap: 5px; min-height: 60px; margin-top: 5px; }
+/* Shan Table Fix */
+.shan-table { background: radial-gradient(var(--green), #05331a); border: 8px solid #3e2723; border-radius: 40px; padding: 15px; position: relative; }
+.card-row { display: flex; justify-content: center; gap: 4px; min-height: 55px; margin-top: 5px; }
+.players-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
 
-/* Card Style */
-.card { 
-    width: 40px; height: 60px; background: white; border-radius: 4px; 
-    color: black; position: relative; font-weight: bold; border: 1px solid #999;
-}
+/* Card Design */
+.card { width: 38px; height: 55px; background: white; border-radius: 4px; color: black; position: relative; font-weight: bold; border: 1px solid #999; }
 .card.red { color: #d00; }
 .card .t { position: absolute; top: 2px; left: 2px; font-size: 10px; }
-.card .m { font-size: 20px; margin-top: 15px; }
+.card .m { font-size: 18px; margin-top: 15px; }
 
-.p-slot { padding: 5px; font-size: 10px; }
-.highlight { border: 1px solid var(--gold); border-radius: 10px; background: rgba(255,215,0,0.1); }
-.players-row { display: flex; justify-content: space-around; margin-top: 15px; }
-
-.action-btn { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+.p-slot { font-size: 10px; }
+.highlight { border: 1px solid var(--gold); border-radius: 8px; background: rgba(255,215,0,0.1); }
 .nav-bar { display: flex; gap: 5px; margin-bottom: 15px; }
-.nav-item { flex: 1; padding: 10px; background: #222; border: none; color: #fff; border-radius: 5px; }
-.nav-item.active { background: var(--gold); color: #000; }
-.footer-wallet { display: flex; gap: 10px; margin-top: 20px; }
+.nav-item { flex: 1; padding: 10px; background: #222; border: none; color: #fff; border-radius: 5px; cursor: pointer; }
+.nav-item.active { background: var(--gold); color: #000; font-weight: bold; }
+
+.action-btn, .gold-btn { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+input, select { width: 85%; padding: 12px; margin-bottom: 10px; background: #000; color: #fff; border: 1px solid #444; border-radius: 5px; }
+.footer-wallet { display: flex; gap: 10px; }
 .w-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; color: #fff; font-weight: bold; }
 .in { background: #28a745; } .out { background: #dc3545; }
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; }
+.modal-box { background: #16162d; padding: 25px; border-radius: 15px; width: 80%; }
