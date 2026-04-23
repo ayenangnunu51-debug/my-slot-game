@@ -14,20 +14,21 @@ async function init() {
 }
 
 async function fetchUserData() {
-    const { data, error } = await _supabase.from('profiles').select('coins').eq('username', username).single();
-    if (data) { 
-        coins = data.coins; 
-        updateUI(); 
-    }
+    try {
+        const { data, error } = await _supabase.from('profiles').select('coins').eq('username', username).single();
+        if (data) { 
+            coins = data.coins; 
+            updateUI(); 
+        }
+    } catch (e) { console.log(e); }
 }
 
-// UI ကို ပြောင်းလဲပေးခြင်း (Logout Button နှင့် Login Box နှစ်မျိုးလုံးပါဝင်သည်)
+// UI ကို ပြောင်းလဲပေးခြင်း
 function updateUI() {
     const authUI = document.getElementById('auth-ui');
     if (!authUI) return;
 
     if (username) {
-        // အကောင့်ဝင်ထားလျှင် - နာမည်၊ ပိုက်ဆံ နှင့် Logout ခလုတ်ကို ပြပါ
         authUI.innerHTML = `
             <div style="text-align:right; color:gold; font-size: 14px;">
                 <b style="color:white;">${username}</b> <br> 
@@ -36,7 +37,6 @@ function updateUI() {
             </div>
         `;
     } else {
-        // အကောင့်ထွက်ထားလျှင် - မူလ Login Box ကို ပြန်ပြပါ
         authUI.innerHTML = `
             <input type="text" id="login-user" placeholder="အမည်">
             <input type="password" id="login-pass" placeholder="လျှို့ဝှက်နံပါတ်">
@@ -46,23 +46,21 @@ function updateUI() {
     }
 }
 
-// Logout စနစ်
 function logout() {
     if(confirm("အကောင့်မှ ထွက်မှာ သေချာပါသလား?")) {
         localStorage.removeItem('game_username');
         username = null;
         coins = 0;
-        updateUI(); // UI ကို Login box ပြန်ဖြစ်အောင် ပြောင်းမည်
+        updateUI();
     }
 }
 
-// Login လုပ်ဆောင်ချက်
 async function login() {
     const u = document.getElementById('login-user').value.trim();
     const p = document.getElementById('login-pass').value;
     if(!u || !p) return alert("အချက်အလက် အကုန်ဖြည့်ပါ");
 
-    const { data, error } = await _supabase.from('profiles').select('*').eq('username', u).eq('password', p).single();
+    const { data, error } = await _supabase.from('profiles').select('*').eq('username', u).eq('password', p).maybeSingle();
     
     if (data) {
         localStorage.setItem('game_username', u);
@@ -75,7 +73,6 @@ async function login() {
     }
 }
 
-// အကောင့်ဖွင့်ရန် Popup ပြသခြင်း
 function showSignup() {
     const panel = document.getElementById('wallet-panel');
     const body = document.getElementById('wallet-body');
@@ -88,32 +85,41 @@ function showSignup() {
     `;
 }
 
-// အကောင့်သစ်ဖွင့်ခြင်း Logic
+// အကောင့်သစ်ဖွင့်ခြင်း (Fixed Logic)
 async function handleSignup() {
     const newUser = document.getElementById('reg-user').value.trim();
     const newPass = document.getElementById('reg-pass').value;
 
-    if (newPass.length < 6) return alert("Password က အနည်းဆုံး ၆ လုံး ရှိရပါမယ်။");
-    if (!newUser) return alert("အမည် ထည့်သွင်းပါ။");
+    if (!newUser || newPass.length < 6) {
+        return alert("အမည်ထည့်ပါ (သို့) Password အနည်းဆုံး ၆ လုံး ရှိရပါမည်။");
+    }
 
+    // ၁။ အမည်တူ ရှိမရှိ အရင်စစ်ဆေးခြင်း
     const { data: existingUser } = await _supabase.from('profiles').select('username').eq('username', newUser).maybeSingle();
-    if (existingUser) return alert("ဒီအမည်က ရှိပြီးသားဖြစ်နေလို့ တခြားအမည်တစ်ခု သုံးပေးပါ။");
+    
+    if (existingUser) {
+        return alert("ဒီအမည်က ရှိပြီးသားဖြစ်နေလို့ တခြားအမည်တစ်ခု သုံးပေးပါ။");
+    }
 
-    const { error } = await _supabase.from('profiles').insert([{ username: newUser, password: newPass, coins: 5000 }]);
+    // ၂။ အကောင့်သစ် ထည့်သွင်းခြင်း
+    const { data, error } = await _supabase
+        .from('profiles')
+        .insert([{ username: newUser, password: newPass, coins: 5000 }])
+        .select();
 
-    if (!error) {
+    if (error) {
+        console.error("Signup Error:", error);
+        alert("အကောင့်ဖွင့်မရပါ။ Supabase Table တွင် 'username' နှင့် 'password' column များ ရှိမရှိ စစ်ဆေးပါ။");
+    } else {
         alert("အကောင့်ဖွင့်ခြင်း အောင်မြင်ပါသည်။");
         localStorage.setItem('game_username', newUser);
         username = newUser;
         coins = 5000;
         closeWallet();
         updateUI();
-    } else {
-        alert("အမှားအယွင်း တစ်ခုရှိနေပါသည်။");
     }
 }
 
-// Wallet လုပ်ဆောင်ချက်များ
 function showWallet(type) {
     if (!username) return alert("အရင်ဆုံး အကောင့်ဝင်ပါ");
     const panel = document.getElementById('wallet-panel');
@@ -143,7 +149,6 @@ async function handleWallet(action) {
 
 function closeWallet() { document.getElementById('wallet-panel').style.display = 'none'; }
 
-// စလော့လှည့်ခြင်း
 async function spinSlot() {
     if (!username) return alert("အရင်ဆုံး အကောင့်ဝင်ပါ");
     if (coins < 100) return alert("ငွေမလုံလောက်ပါ");
@@ -151,10 +156,7 @@ async function spinSlot() {
     coins -= 100; 
     updateUI();
     const { error } = await _supabase.from('profiles').update({ coins: coins }).eq('username', username);
-    
-    if(!error) {
-        alert("စလော့လှည့်နေပါသည်...");
-    }
+    if(!error) { alert("စလော့လှည့်နေပါသည်..."); }
 }
 
 init();
