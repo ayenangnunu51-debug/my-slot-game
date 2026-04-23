@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Live ShanKoeMee</title>
+    <title>Golden Casino - Nang Nu Live Edition</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-page" class="app-container">
         <div class="header">
             <div class="user-info">👤 <span id="display-user">Nang Nu</span></div>
-            <div class="balance">💰 <span id="balance">5000</span> K</div>
+            <div class="balance-box">💰 <span id="balance">5000</span> K</div>
         </div>
 
         <div class="live-status">
             <div class="indicator"><span class="blink-dot"></span> LIVE</div>
             <div id="status-text">လောင်းကြေးတင်ရန် စောင့်ဆိုင်းနေပါ</div>
-            <div class="timer-box">
+            <div class="timer-wrapper">
                 <div id="timer-bar"></div>
                 <span id="timer-num">30</span>
             </div>
@@ -24,20 +24,21 @@
 
         <div class="casino-table">
             <div class="dealer-box">
-                <div class="avatar">👩‍💼</div>
+                <div class="dealer-img">👩‍💼</div>
                 <div id="dealer-cards" class="card-fan"></div>
                 <p>Dealer</p>
             </div>
 
-            <div class="seats-container">
-                <div class="seat s1"><div id="p1-cards" class="card-fan"></div><p>P1</p></div>
-                <div class="seat s2"><div id="p2-cards" class="card-fan"></div><p>P2</p></div>
+            <div class="player-seats">
+                <div class="seat p1"><div id="p1-cards" class="card-fan"></div><p>P1</p></div>
+                <div class="seat p2"><div id="p2-cards" class="card-fan"></div><p>P2</p></div>
+                <div class="seat p3"><div id="p3-cards" class="card-fan"></div><p>P3</p></div>
+                <div class="seat p4"><div id="p4-cards" class="card-fan"></div><p>P4</p></div>
+                
                 <div class="seat user-seat">
                     <div id="me-cards" class="card-fan"></div>
-                    <div class="my-label">YOU <span id="my-bet-label"></span></div>
+                    <div class="label">YOU <span id="my-bet-label"></span></div>
                 </div>
-                <div class="seat s3"><div id="p3-cards" class="card-fan"></div><p>P3</p></div>
-                <div class="seat s4"><div id="p4-cards" class="card-fan"></div><p>P4</p></div>
             </div>
         </div>
 
@@ -54,6 +55,7 @@
 
     <audio id="snd-card" src="https://actions.google.com/sounds/v1/foley/card_shuffle.ogg"></audio>
     <audio id="snd-win" src="https://actions.google.com/sounds/v1/cartoon/clinker_win.ogg"></audio>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>
