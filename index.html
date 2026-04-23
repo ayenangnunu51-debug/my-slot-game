@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Casino - All-in-One</title>
+    <title>Golden Casino - Home</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -14,14 +14,14 @@
                 <span style="color: gold;"><i class="fas fa-user-circle"></i> <span id="user-name">...</span></span>
                 <button onclick="handleLogout()" class="logout-link">Logout</button>
             </div>
-            <div class="balance-box">
+            <div class="balance-display">
                 💰 <span id="balance">0</span> K
             </div>
         </div>
 
-        <div class="bet-container">
-            <span>လောင်းကြေး:</span>
-            <select id="bet-amount" class="bet-select">
+        <div class="bet-selection">
+            <span>BET:</span>
+            <select id="bet-amount" class="bet-input">
                 <option value="100">100 K</option>
                 <option value="500">500 K</option>
                 <option value="1000">1,000 K</option>
@@ -31,56 +31,57 @@
         </div>
 
         <div class="game-nav">
-            <button onclick="switchGame('slot')" id="nav-slot" class="nav-btn active">Slot</button>
-            <button onclick="switchGame('dice')" id="nav-dice" class="nav-btn">Dice</button>
-            <button onclick="switchGame('wheel')" id="nav-wheel" class="nav-btn">Wheel</button>
+            <button onclick="switchGame('slot')" id="nav-slot" class="nav-item active">SLOT</button>
+            <button onclick="switchGame('dice')" id="nav-dice" class="nav-item">DICE</button>
+            <button onclick="switchGame('wheel')" id="nav-wheel" class="nav-item">WHEEL</button>
         </div>
 
-        <div id="slot-area" class="game-display">
-            <div class="slot-machine">
+        <div id="slot-area" class="game-panel">
+            <div class="slot-container">
                 <div id="r1" class="reel">🎰</div>
                 <div id="r2" class="reel">🎰</div>
                 <div id="r3" class="reel">🎰</div>
             </div>
-            <button onclick="playSlot()" id="spin-btn" class="action-btn">SPIN NOW</button>
+            <button onclick="playSlot()" class="action-btn spin-btn">SPIN</button>
         </div>
 
-        <div id="dice-area" class="game-display" style="display: none;">
-            <div class="dice-container">
-                <div id="dice-box" class="dice">⚀</div>
-            </div>
-            <div class="dice-controls">
-                <button onclick="playDice('high')" class="action-btn" style="background: #28a745;">အကြီး (၄,၅,၆)</button>
-                <button onclick="playDice('low')" class="action-btn" style="background: #dc3545;">အသေး (၁,၂,၃)</button>
+        <div id="dice-area" class="game-panel" style="display: none;">
+            <div id="dice-box" class="dice-view">⚀</div>
+            <div class="dice-btns">
+                <button onclick="playDice('high')" class="action-btn btn-high">အကြီး (၄,၅,၆)</button>
+                <button onclick="playDice('low')" class="action-btn btn-low">အသေး (၁,၂,၃)</button>
             </div>
         </div>
 
-        <div id="wheel-area" class="game-display" style="display: none;">
-            <div class="wheel-outer">
-                <div id="wheel-pointer">▼</div>
-                <div id="wheel-circle" class="wheel">🎡</div>
+        <div id="wheel-area" class="game-panel" style="display: none;">
+            <div class="wheel-box">
+                <div id="pointer">▼</div>
+                <div id="wheel-inner" class="wheel-circle">🎡</div>
             </div>
-            <button onclick="playWheel()" id="wheel-btn" class="action-btn">SPIN WHEEL</button>
+            <button onclick="playWheel()" class="action-btn">SPIN WHEEL</button>
         </div>
 
-        <div class="wallet-footer">
-            <button onclick="showWallet('deposit')" class="w-btn d-btn">ငွေသွင်း</button>
-            <button onclick="showWallet('withdraw')" class="w-btn w-btn-red">ငွေထုတ်</button>
+        <div class="footer-btns">
+            <button onclick="showWallet('deposit')" class="w-btn dep-btn">ငွေသွင်း</button>
+            <button onclick="showWallet('withdraw')" class="w-btn wit-btn">ငွေထုတ်</button>
         </div>
 
-        <div id="wallet-modal" class="modal">
-            <div class="modal-content">
-                <h3 id="wallet-title" style="color: gold;">ငွေသွင်းမည်</h3>
-                <div id="bank-info" class="bank-card">
-                    <p>Kpay/Wave: 09680575421</p>
+        <div id="wallet-modal" class="modal-overlay">
+            <div class="modal-card">
+                <h3 id="wallet-title" style="color: gold;">Transaction</h3>
+                <div class="bank-info">
+                    <p>KBZ Pay / Wave Pay: 09680575421</p>
                     <p>Name: Thant Naing Aye</p>
                 </div>
-                <input type="number" id="wallet-amount" oninput="updateRemBalance()" placeholder="ပမာဏ">
-                <input type="text" id="wallet-details" placeholder="ID (သို့) ဖုန်းနံပါတ်">
-                <div class="rem-bal-text">ကျန်မည့်ငွေ: <span id="rem-bal">0</span> K</div>
-                <div class="modal-btns">
-                    <button onclick="submitRequest()" class="action-btn">Confirm</button>
-                    <button onclick="closeWallet()" class="action-btn grey-btn">Close</button>
+                <div class="input-group">
+                    <label>လက်ရှိပမာဏ: <span id="modal-cur-bal">0</span> K</label>
+                    <input type="number" id="wallet-amount" oninput="updateRemCalc()" placeholder="ပမာဏထည့်ပါ">
+                    <input type="text" id="wallet-phone" placeholder="ငွေလက်ခံမည့် ဖုန်းနံပါတ်/ID">
+                    <label style="color: #00ff00;">ကျန်ရှိမည့်ပမာဏ: <span id="modal-rem-bal">0</span> K</label>
+                </div>
+                <div class="modal-actions">
+                    <button onclick="submitWallet()" class="action-btn">အတည်ပြုမည်</button>
+                    <button onclick="closeWallet()" class="action-btn cancel-btn">ပိတ်မည်</button>
                 </div>
             </div>
         </div>
