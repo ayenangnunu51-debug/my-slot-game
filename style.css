@@ -1,41 +1,20 @@
-body { background: #080810; color: #fff; font-family: sans-serif; margin: 0; }
+body { background: #0a0a12; color: white; font-family: sans-serif; margin: 0; }
 .app-container { max-width: 450px; margin: auto; padding: 15px; min-height: 100vh; }
-
-.game-header { display: flex; justify-content: space-between; align-items: center; background: #151525; padding: 15px; border-radius: 12px; border: 1px solid #333; }
-.balance-display { background: #000; border: 1px solid gold; padding: 8px 15px; border-radius: 20px; font-weight: bold; color: gold; }
-
-.bet-selection { margin: 15px 0; background: #1a1a2e; padding: 10px; border-radius: 8px; text-align: center; }
-.bet-input { background: #000; color: gold; border: 1px solid gold; padding: 5px; border-radius: 5px; }
-
-.game-nav { display: flex; gap: 5px; margin-bottom: 20px; }
-.nav-item { flex: 1; padding: 12px; border: none; background: #222; color: #fff; cursor: pointer; border-radius: 5px; font-weight: bold; }
+.game-box, .game-panel { background: #16162b; padding: 25px; border-radius: 15px; border: 1px solid #333; text-align: center; }
+.action-btn { width: 100%; padding: 15px; border: none; border-radius: 8px; background: gold; color: #000; font-weight: bold; cursor: pointer; margin-top: 10px; }
+.game-header { display: flex; justify-content: space-between; align-items: center; background: #1a1a3a; padding: 12px; border-radius: 10px; margin-bottom: 15px; }
+.balance-display { color: gold; font-weight: bold; border: 1px solid gold; padding: 5px 12px; border-radius: 20px; }
+.game-nav { display: flex; gap: 5px; margin-bottom: 15px; }
+.nav-item { flex: 1; padding: 10px; border: none; border-radius: 5px; background: #222; color: #fff; cursor: pointer; }
 .nav-item.active { background: gold; color: #000; }
-
-.game-panel { background: #151525; padding: 30px 15px; border-radius: 15px; border: 1px solid #333; text-align: center; }
-.slot-container { display: flex; justify-content: center; gap: 10px; font-size: 3rem; margin-bottom: 25px; }
-.reel { background: #000; padding: 10px; border-radius: 10px; border: 1px solid #444; width: 70px; }
-
-.dice-view { font-size: 6rem; color: gold; margin-bottom: 25px; }
-.dice-btns { display: flex; gap: 10px; }
-
-.wheel-box { position: relative; margin-bottom: 25px; }
-.wheel-circle { width: 160px; height: 160px; border: 5px solid gold; border-radius: 50%; font-size: 3.5rem; display: flex; align-items: center; justify-content: center; margin: auto; }
-#pointer { font-size: 2rem; color: red; margin-bottom: -15px; }
-
-.action-btn { width: 100%; padding: 15px; border: none; border-radius: 8px; background: gold; color: #000; font-weight: bold; font-size: 1rem; cursor: pointer; }
-.btn-high { background: #28a745; color: #fff; }
-.btn-low { background: #dc3545; color: #fff; }
-
+.slot-container { display: flex; justify-content: center; gap: 8px; font-size: 2.5rem; margin-bottom: 20px; }
+.reel { background: #000; width: 60px; padding: 10px; border-radius: 8px; border: 1px solid #444; }
+.dice-view { font-size: 5rem; color: gold; margin-bottom: 20px; }
+.wheel-circle { width: 150px; height: 150px; border: 4px solid gold; border-radius: 50%; font-size: 3rem; display: flex; align-items: center; justify-content: center; margin: auto; }
 .footer-btns { display: flex; gap: 10px; margin-top: 20px; }
-.w-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; color: #fff; cursor: pointer; }
-.dep-btn { background: #28a745; }
-.wit-btn { background: #dc3545; }
-
-/* Modal */
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 100; }
-.modal-card { background: #151525; width: 85%; padding: 20px; border-radius: 15px; border: 1px solid gold; }
-.bank-info { background: #000; padding: 12px; border-radius: 8px; font-size: 0.85rem; border-left: 4px solid gold; margin-bottom: 15px; text-align: left; }
-.input-group label { display: block; text-align: left; font-size: 0.8rem; margin-bottom: 5px; color: gold; }
-input { width: 92%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px; }
-.cancel-btn { background: #555; color: #fff; margin-top: 10px; }
-.logout-link { background: none; border: none; color: #ff4444; cursor: pointer; font-size: 0.75rem; }
+.w-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; color: #fff; font-weight: bold; }
+.dep-btn { background: #28a745; } .wit-btn { background: #dc3545; }
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; }
+.modal-card { background: #16162b; width: 85%; padding: 20px; border-radius: 15px; border: 1px solid gold; }
+input { width: 90%; padding: 10px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: #fff; }
+.logout-link { background: none; border: none; color: #ff4444; cursor: pointer; font-size: 0.8rem; }
