@@ -1,7 +1,6 @@
-// ၁။ Supabase Keys များ (URL ထဲက 'b' ကို ဖြုတ်ပြီး API Key အမှန်ကို ထည့်ထားပါတယ်)
-const SB_URL = "https://mgxhoraolmrqvyjaiw.supabase.co"; 
-const SB_KEY = "sb_publishable_wIgcdXqvZTr9MJeV6vAEYw_bMSsvD3J"; 
-const _supabase = supabase.createClient(SB_URL, SB_KEY);
+const SB_URL = "https://mgxhoraoablmrqvyjaiw.supabase.co";
+const SB_KEY = "sb_publishable_wIgcdXqvZTr9MJeV6vAEYw_bMSsvD3J";
+const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
 let coins = 0;
 let username = localStorage.getItem('game_username') || null;
