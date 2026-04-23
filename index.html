@@ -13,7 +13,7 @@
             <input type="text" id="login-user" placeholder="အမည်">
             <input type="password" id="login-pass" placeholder="လျှို့ဝှက်နံပါတ်">
             <button class="login-btn" onclick="login()">ဝင်မည်</button>
-            <div style="font-size: 10px; margin-top: 5px; cursor: pointer; color: gold;" onclick="showSignup()">အကောင့်မရှိသေးပါက ဖွင့်ရန်</div>
+            <div style="font-size: 10px; margin-top: 5px; cursor: pointer; color: gold; text-align: center;" onclick="showSignup()">အကောင့်မရှိသေးပါက ဖွင့်ရန်</div>
         </div>
     </div>
 
@@ -24,6 +24,21 @@
             <button class="cashback" style="background:red; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; cursor:pointer;" onclick="spinSlot()">
                 စလော့လှည့်မည် (100 K)
             </button>
+        </div>
+    </div>
+
+    <div class="game-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px;">
+        <div class="game-card" onclick="spinSlot()" style="background:#161d2b; border:1px solid gold; border-radius:10px; text-align:center; padding:15px; cursor:pointer;">
+            <span style="font-size: 24px;">🎰</span><br>
+            <span style="font-size:12px; color: gold;">Slot 777</span>
+        </div>
+        <div class="game-card" onclick="alert('မကြာမီလာမည်')" style="background:#161d2b; border:1px solid gold; border-radius:10px; text-align:center; padding:15px; cursor:pointer;">
+            <span style="font-size: 24px;">🃏</span><br>
+            <span style="font-size:12px; color: #ccc;">Casino</span>
+        </div>
+        <div class="game-card" onclick="alert('မကြာမီလာမည်')" style="background:#161d2b; border:1px solid gold; border-radius:10px; text-align:center; padding:15px; cursor:pointer;">
+            <span style="font-size: 24px;">⚽</span><br>
+            <span style="font-size:12px; color: #ccc;">Sports</span>
         </div>
     </div>
 
@@ -46,14 +61,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-<div class="game-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px;">
-    <div class="game-card" onclick="spinSlot()" style="background:#161d2b; border:1px solid gold; border-radius:10px; text-align:center; padding:10px;">
-        🎰<br><span style="font-size:12px;">Slot 777</span>
-    </div>
-    <div class="game-card" onclick="alert('မကြာမီလာမည်')" style="background:#161d2b; border:1px solid gold; border-radius:10px; text-align:center; padding:10px;">
-        🃏<br><span style="font-size:12px;">Casino</span>
-    </div>
-    <div class="game-card" onclick="alert('မကြာမီလာမည်')" style="background:#161d2b; border:1px solid gold; border-radius:10px; text-align:center; padding:10px;">
-        ⚽<br><span style="font-size:12px;">Sports</span>
-    </div>
-</div>
