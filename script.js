@@ -6,9 +6,9 @@ if (!pId && !window.location.href.includes('signup.html')) {
 
 const symbols = ['🍒', '🍋', '🔔', '💎', '7️⃣', '🍀'];
 
-// Slot Function
+// Slot Logic
 function spinSlot() {
-    if (coins < 100) return alert("ငွေမလုံလောက်ပါ");
+    if (coins < 100) return alert("လက်ကျန်ငွေ မလုံလောက်ပါ");
     coins -= 100; updateUI();
     document.getElementById('slot-msg').innerText = "လှည့်နေသည်...";
     
@@ -26,11 +26,11 @@ function spinSlot() {
             document.getElementById('slot-msg').innerText = "ထပ်မံကြိုးစားပါ";
         }
         updateUI();
-    }, 800);
+    }, 1000);
 }
 
-// Timer Loop
-function gameLoop() {
+// Shan Koe Mee Timer
+function startTimer() {
     setInterval(() => {
         time--;
         if (time <= 0) { time = 30; resetTable(); }
@@ -46,8 +46,8 @@ function dealCards() {
     });
 }
 
-function switchTab(n) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+function tab(n) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
     document.getElementById(n).classList.add('active');
     document.getElementById('t-'+n).classList.add('active');
@@ -62,4 +62,4 @@ function logout() { localStorage.clear(); window.location.href = 'signup.html'; 
 function resetTable() { ['d-cards','p1-cards','p2-cards','my-cards'].forEach(id => document.getElementById(id).innerHTML = ""); }
 
 updateUI();
-gameLoop();
+startTimer();
