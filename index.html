@@ -1,70 +1,63 @@
-<!DOCTYPE html>
-<html lang="my">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nang Nu Casino Official</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body>
-    <div class="app">
-        <div class="header">
-            <div>👤 <span id="user-display">...</span></div>
-            <div class="gold-text">💰 <span id="coin-display">0</span> K</div>
-            <button onclick="logout()" class="exit-btn">Logout</button>
-        </div>
+const SB_URL = "https://mgxhoraoablmrqvyjaiw.supabase.co";
+const SB_KEY = "sb_publishable_wIgcdXqvZTr9MJeV6vAEYw_bMSsvD3J";
+const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-        <div class="nav">
-            <button onclick="tab('shan')" id="t-shan" class="active">ရှမ်းကိုးမီး</button>
-            <button onclick="tab('slot')" id="t-slot">SLOT</button>
-            <button onclick="tab('wallet')" id="t-wallet">WALLET</button>
-        </div>
+let coins = 5000, pId = localStorage.getItem('game_user_id'), time = 30;
 
-        <div id="shan" class="panel active">
-            <div class="timer-area">
-                <div id="status-text">လောင်းကြေးတင်ရန် အချိန်ကျန်</div>
-                <div class="progress"><div id="bar"></div></div>
-                <div id="timer-num">30</div>
-            </div>
-            <div class="table">
-                <div class="seat dealer"><span class="icon">👩‍💼</span><div id="d-cards" class="hand"></div>ဒိုင်</div>
-                <div class="seat p1"><span class="icon">👨‍🦰</span><div id="p1-cards" class="hand"></div>P1</div>
-                <div class="seat p2"><span class="icon">👱‍♀️</span><div id="p2-cards" class="hand"></div>P2</div>
-                <div class="seat me"><span class="icon">😎</span><div id="my-cards" class="hand"></div>YOU <span id="bet-label"></span></div>
-            </div>
-            <div class="bet-controls">
-                <select id="bet-amt"><option value="500">500 K</option><option value="1000">1000 K</option></select>
-                <button onclick="placeBet()" id="bet-btn">လောင်းမည်</button>
-            </div>
-        </div>
+// ၁။ အကောင့်စစ်ဆေးခြင်း
+if (!pId && !window.location.href.includes('signup.html')) {
+    window.location.href = 'signup.html';
+}
 
-        <div id="slot" class="panel">
-            <div class="slot-machine">
-                <div class="slot-row">
-                    <div id="s1" class="reel">🎰</div>
-                    <div id="s2" class="reel">🎰</div>
-                    <div id="s3" class="reel">🎰</div>
-                </div>
-                <div id="slot-result">ကံစမ်းကြည့်ပါ!</div>
-                <button onclick="spinSlot()" id="spin-btn" class="spin-btn">SPIN NOW</button>
-            </div>
-        </div>
+// ၂။ SLOT Game Functions
+const symbols = ['🍒', '🍋', '🔔', '💎', '7️⃣', '🍀'];
+function spinSlot() {
+    if (coins < 100) return alert("လက်ကျန်ငွေ မလုံလောက်ပါ");
+    coins -= 100; updateUI();
+    
+    document.getElementById('slot-result').innerText = "လှည့်နေသည်...";
+    let spins = [0,0,0].map(() => symbols[Math.floor(Math.random()*symbols.length)]);
 
-        <div id="wallet" class="panel">
-            <div class="wallet-box">
-                <h4>ငွေသွင်းရန် (09-XXXXXXXXX)</h4>
-                <input type="number" id="in-amt" placeholder="ပမာဏ">
-                <input type="text" id="in-id" placeholder="လုပ်ငန်းစဉ်နံပါတ် (နောက်ဆုံး ၆ လုံး)">
-                <button onclick="deposit()" class="in-btn">တင်ပြမည်</button>
-                <hr>
-                <h4>ငွေထုတ်ရန်</h4>
-                <input type="number" id="out-amt" placeholder="ပမာဏ">
-                <input type="text" id="out-phone" placeholder="ဖုန်းနံပါတ်">
-                <button onclick="withdraw()" class="out-btn">ထုတ်ယူမည်</button>
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+    setTimeout(() => {
+        document.getElementById('s1').innerText = spins[0];
+        document.getElementById('s2').innerText = spins[1];
+        document.getElementById('s3').innerText = spins[2];
+
+        if (spins[0] === spins[1] && spins[1] === spins[2]) {
+            let win = 5000; coins += win;
+            document.getElementById('slot-result').innerText = "🏆 BIG WIN! +5000 K";
+        } else {
+            document.getElementById('slot-result').innerText = "ထပ်မံကြိုးစားပါ";
+        }
+        updateUI();
+    }, 1000);
+}
+
+// ၃။ ရှမ်းကိုးမီး Timer & Deal
+function startLoop() {
+    setInterval(() => {
+        time--;
+        if (time <= 0) { time = 30; resetTable(); }
+        document.getElementById('timer-num').innerText = time;
+        document.getElementById('bar').style.width = (time/30)*100 + "%";
+        if (time === 10) dealCards();
+    }, 1000);
+}
+
+function dealCards() {
+    ['d-cards','p1-cards','p2-cards','my-cards'].forEach((id, i) => {
+        setTimeout(() => {
+            document.getElementById(id).innerHTML = `<div class="card">A♠</div><div class="card">9♥</div>`;
+        }, i * 300);
+    });
+}
+
+function updateUI() { document.getElementById('coin-display').innerText = coins.toLocaleString(); }
+function tab(n) { 
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(n).classList.add('active');
+}
+function logout() { localStorage.removeItem('game_user_id'); window.location.href = 'signup.html'; }
+function resetTable() { ['d-cards','p1-cards','p2-cards','my-cards'].forEach(id => document.getElementById(id).innerHTML = ""); }
+
+startLoop();
